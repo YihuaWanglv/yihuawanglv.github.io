@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="用户帐号登录表设计当存在密码登录、第三方授权登录等登录方式的时候，系统的用户帐号模型应该如何设计？ 1. 首先，这是一种思考方案用户profile表一张，相当于用户总表 帐号密码登录，作为一种登录方式，搞一张表 OAuth作为一种登录方式，也建一张表；如果还有别的登录方式，也可以创建对应的认证表； 有些网站需要API访问，API可以使用api_key和api_secret来认证，可是怎么把一个AP">
+<meta name="keywords" content="design,模型设计,表设计,帐号系统,认证方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[design]多认证方式的情况下如何设计帐号模型表">
+<meta property="og:url" content="http://localhost:4000/2018/12/13/design-多认证方式的情况下如何设计帐号模型表/index.html">
+<meta property="og:site_name" content="iyihua">
+<meta property="og:description" content="用户帐号登录表设计当存在密码登录、第三方授权登录等登录方式的时候，系统的用户帐号模型应该如何设计？ 1. 首先，这是一种思考方案用户profile表一张，相当于用户总表 帐号密码登录，作为一种登录方式，搞一张表 OAuth作为一种登录方式，也建一张表；如果还有别的登录方式，也可以创建对应的认证表； 有些网站需要API访问，API可以使用api_key和api_secret来认证，可是怎么把一个AP">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-21T20:44:05.504Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[design]多认证方式的情况下如何设计帐号模型表">
+<meta name="twitter:description" content="用户帐号登录表设计当存在密码登录、第三方授权登录等登录方式的时候，系统的用户帐号模型应该如何设计？ 1. 首先，这是一种思考方案用户profile表一张，相当于用户总表 帐号密码登录，作为一种登录方式，搞一张表 OAuth作为一种登录方式，也建一张表；如果还有别的登录方式，也可以创建对应的认证表； 有些网站需要API访问，API可以使用api_key和api_secret来认证，可是怎么把一个AP">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="iyihua" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://localhost:4000/2018/12/13/design-多认证方式的情况下如何设计帐号模型表/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[design]多认证方式的情况下如何设计帐号模型表 | iyihua</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iyihua</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/12/13/design-多认证方式的情况下如何设计帐号模型表/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[design]多认证方式的情况下如何设计帐号模型表
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-13 17:48:44" itemprop="dateCreated datePublished" datetime="2018-12-13T17:48:44+08:00">2018-12-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/design/" itemprop="url" rel="index"><span itemprop="name">design</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="用户帐号登录表设计"><a href="#用户帐号登录表设计" class="headerlink" title="用户帐号登录表设计"></a>用户帐号登录表设计</h1><p>当存在密码登录、第三方授权登录等登录方式的时候，系统的用户帐号模型应该如何设计？</p>
+<h2 id="1-首先，这是一种思考方案"><a href="#1-首先，这是一种思考方案" class="headerlink" title="1. 首先，这是一种思考方案"></a>1. 首先，这是一种思考方案</h2><p>用户profile表一张，相当于用户总表</p>
+<p>帐号密码登录，作为一种登录方式，搞一张表</p>
+<p>OAuth作为一种登录方式，也建一张表；如果还有别的登录方式，也可以创建对应的认证表；</p>
+<p>有些网站需要API访问，API可以使用api_key和api_secret来认证，可是怎么把一个API访问关联到一个用户？方法还是增加一种API Auth的表：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id | user_id | api_key  | api_secret</span><br></pre></td></tr></table></figure></p>
+<p>每一种X-Auth表都存储了用户的登录认证信息，并通过user_id关联到Users表。这样一来，不但登录过程简化了，而且一个用户可以使用多种方式登录。只要登录成功，拿到了user_id，最后读取Users表是为了获得用户的Profile</p>
+<h2 id="2-另一种思路："><a href="#2-另一种思路：" class="headerlink" title="2. 另一种思路："></a>2. 另一种思路：</h2><p>用户总表，含平台唯一uid；</p>
+<p>每一个app，都注册登录过，会有对应的appuserid；</p>
+<p>不同app通过一个和总表的关联表关联起来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">本地用户唯一ID  社交网络类型  社交网络唯一ID</span><br><span class="line">1112  weibo 20</span><br><span class="line">5111  qq  20</span><br><span class="line">6000  weixin  10</span><br><span class="line">6000  qq  300</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-目前第三方登录通常有两种设计思路"><a href="#3-目前第三方登录通常有两种设计思路" class="headerlink" title="3. 目前第三方登录通常有两种设计思路"></a>3. 目前第三方登录通常有两种设计思路</h2><h3 id="1、将第三方登录看成一种登录方式，使用第三方登录的前提是，你先要有一个账户。"><a href="#1、将第三方登录看成一种登录方式，使用第三方登录的前提是，你先要有一个账户。" class="headerlink" title="1、将第三方登录看成一种登录方式，使用第三方登录的前提是，你先要有一个账户。"></a>1、将第三方登录看成一种登录方式，使用第三方登录的前提是，你先要有一个账户。</h3><p>缺点：当用户没有账户，直接使用第三方登录时，你只能提示他先去注册账户。但在用户看来，就是欺骗，容易引起用户的反感。</p>
+<p>优点：当用户账户绑定了第三方账号后，用户就在也不用记住密码了，完全可以通过各个熟悉的第三方账号登录系统。</p>
+<h3 id="2、将第三方登录，看成一个独立的用户"><a href="#2、将第三方登录，看成一个独立的用户" class="headerlink" title="2、将第三方登录，看成一个独立的用户"></a>2、将第三方登录，看成一个独立的用户</h3><p>优点：没有注册流程，容易吸引用户，由于是第三方直接登录，也不需要考虑用户会忘记密码</p>
+<p>缺点：一个人容易产生多个账户，用户的行为容易分散到多个账户中，增加了系统的复杂性，某些情况下还会影响用户的产品体验。</p>
+<p>通篇看下来，第三方登录并没有想象中的那么美好，第一种方式也就仅仅解决用户忘记密码的问题，注册时还会引起用户反感。第二种方式虽然能起到吸引用户的作用，但却增加了系统的复杂性，某些情况下还会影响用户的产品体验。</p>
+<p>所以，大家可以根据自己的实际情况，考虑是否要添加第三方登录的支持，如果要，应该使用哪种第三方登录的模式。</p>
+<h2 id="4-user-auths表例子"><a href="#4-user-auths表例子" class="headerlink" title="4. user_auths表例子"></a>4. user_auths表例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">user_auths</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">id             # 自增id</span><br><span class="line">user_id        # users表对应的id</span><br><span class="line">identity_type  # 身份类型（站内username 邮箱email 手机mobile 或者第三方的qq weibo weixin等等）</span><br><span class="line">identifier     # 身份唯一标识（存储唯一标识，比如账号、邮箱、手机号、第三方获取的唯一标识等）</span><br><span class="line">credential     # 授权凭证（比如密码 第三方登录的token等）</span><br><span class="line">verified       # 是否已经验证（存储 1、0 来区分是否已经验证通过）</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/design/" rel="tag"># design</a>
+          
+            <a href="/tags/模型设计/" rel="tag"># 模型设计</a>
+          
+            <a href="/tags/表设计/" rel="tag"># 表设计</a>
+          
+            <a href="/tags/帐号系统/" rel="tag"># 帐号系统</a>
+          
+            <a href="/tags/认证方式/" rel="tag"># 认证方式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/13/Golang-Tour学习记录/" rel="next" title="Golang Tour学习记录">
+                <i class="fa fa-chevron-left"></i> Golang Tour学习记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/13/elasticsearch-windows下安装elasticsearch5-6/" rel="prev" title="[elasticsearch]windows下安装elasticsearch5-6">
+                [elasticsearch]windows下安装elasticsearch5-6 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/default_avatar.jpg" alt="Wanglv Yihua">
+            
+              <p class="site-author-name" itemprop="name">Wanglv Yihua</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">197</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#用户帐号登录表设计"><span class="nav-number">1.</span> <span class="nav-text">用户帐号登录表设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-首先，这是一种思考方案"><span class="nav-number">1.1.</span> <span class="nav-text">1. 首先，这是一种思考方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-另一种思路："><span class="nav-number">1.2.</span> <span class="nav-text">2. 另一种思路：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-目前第三方登录通常有两种设计思路"><span class="nav-number">1.3.</span> <span class="nav-text">3. 目前第三方登录通常有两种设计思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、将第三方登录看成一种登录方式，使用第三方登录的前提是，你先要有一个账户。"><span class="nav-number">1.3.1.</span> <span class="nav-text">1、将第三方登录看成一种登录方式，使用第三方登录的前提是，你先要有一个账户。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、将第三方登录，看成一个独立的用户"><span class="nav-number">1.3.2.</span> <span class="nav-text">2、将第三方登录，看成一个独立的用户</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-user-auths表例子"><span class="nav-number">1.4.</span> <span class="nav-text">4. user_auths表例子</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wanglv Yihua</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.4.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

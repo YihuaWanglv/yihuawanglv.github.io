@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一. mysql数据库（一）建表约定1.【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。说明：MySQL 在 Windows 下不区分大小写，但在 Linux下默认是区分大小写。因此，数据库名、表名、字段名，都不允许出现任何大写字母，避免节外生枝。 正例：aliyun_admin，">
+<meta name="keywords" content="java,开发规范,后端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java后端项目开发规范">
+<meta property="og:url" content="http://localhost:4000/2019/11/04/java后端项目开发规范/index.html">
+<meta property="og:site_name" content="iyihua">
+<meta property="og:description" content="一. mysql数据库（一）建表约定1.【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。说明：MySQL 在 Windows 下不区分大小写，但在 Linux下默认是区分大小写。因此，数据库名、表名、字段名，都不允许出现任何大写字母，避免节外生枝。 正例：aliyun_admin，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://localhost:4000/2019/11/04/java后端项目开发规范/images/java-file-001.png">
+<meta property="og:updated_time" content="2019-11-04T07:51:30.331Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java后端项目开发规范">
+<meta name="twitter:description" content="一. mysql数据库（一）建表约定1.【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。说明：MySQL 在 Windows 下不区分大小写，但在 Linux下默认是区分大小写。因此，数据库名、表名、字段名，都不允许出现任何大写字母，避免节外生枝。 正例：aliyun_admin，">
+<meta name="twitter:image" content="http://localhost:4000/2019/11/04/java后端项目开发规范/images/java-file-001.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="iyihua" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://localhost:4000/2019/11/04/java后端项目开发规范/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>java后端项目开发规范 | iyihua</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iyihua</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2019/11/04/java后端项目开发规范/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java后端项目开发规范
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-04 15:49:28 / 修改时间：15:51:30" itemprop="dateCreated datePublished" datetime="2019-11-04T15:49:28+08:00">2019-11-04</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/manager/" itemprop="url" rel="index"><span itemprop="name">manager</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一-mysql数据库"><a href="#一-mysql数据库" class="headerlink" title="一. mysql数据库"></a>一. mysql数据库</h1><h2 id="（一）建表约定"><a href="#（一）建表约定" class="headerlink" title="（一）建表约定"></a>（一）建表约定</h2><h3 id="1-【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。"><a href="#1-【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。" class="headerlink" title="1.【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。"></a>1.【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。</h3><p>说明：MySQL 在 Windows 下不区分大小写，但在 Linux下默认是区分大小写。因此，数据库名、表名、字段名，都不允许出现任何大写字母，避免节外生枝。</p>
+<p>正例：aliyun_admin，rdc_config，level3_name</p>
+<p>反例：AliyunAdmin，rdcConfig，level_3_name</p>
+<h3 id="2-【强制】小数类型为-decimal，在需要精确经度的时候禁止使用-float和double。"><a href="#2-【强制】小数类型为-decimal，在需要精确经度的时候禁止使用-float和double。" class="headerlink" title="2.【强制】小数类型为 decimal，在需要精确经度的时候禁止使用 float和double。"></a>2.【强制】小数类型为 decimal，在需要精确经度的时候禁止使用 float和double。</h3><p>说明：float 和 double在存储的时候，存在精度损失的问题，很可能在值的比较时，得到不正确的结果。如果存储的数据范围超过decimal的范围，建议将数据拆成整数和小数分开存储。</p>
+<h3 id="3-【强制】表示状态类型等的数字可枚举类的字段，数据类型应该使用tinyint。如果字段为非负数，数据类型是unsigned-tinyint"><a href="#3-【强制】表示状态类型等的数字可枚举类的字段，数据类型应该使用tinyint。如果字段为非负数，数据类型是unsigned-tinyint" class="headerlink" title="3.【强制】表示状态类型等的数字可枚举类的字段，数据类型应该使用tinyint。如果字段为非负数，数据类型是unsigned tinyint."></a>3.【强制】表示状态类型等的数字可枚举类的字段，数据类型应该使用tinyint。如果字段为非负数，数据类型是unsigned tinyint.</h3><p>说明：任何字段如果为非负数，必须是 unsigned。</p>
+<h3 id="4-【强制】表名不使用复数名词"><a href="#4-【强制】表名不使用复数名词" class="headerlink" title="4.【强制】表名不使用复数名词"></a>4.【强制】表名不使用复数名词</h3><h3 id="5-【强制】主键索引名为-pk-字段名；唯一索引名为-uk-字段名；普通索引名则为-idx-字段名。"><a href="#5-【强制】主键索引名为-pk-字段名；唯一索引名为-uk-字段名；普通索引名则为-idx-字段名。" class="headerlink" title="5.【强制】主键索引名为 pk_字段名；唯一索引名为 uk_字段名；普通索引名则为 idx_字段名。"></a>5.【强制】主键索引名为 pk_字段名；唯一索引名为 uk_字段名；普通索引名则为 idx_字段名。</h3><p>说明：pk_ 即 primary key；uk_ 即 unique key；idx_ 即 index 的简称。</p>
+<h3 id="6-【强制】如果存储的字符串长度几乎相等，使用-char定长字符串类型。"><a href="#6-【强制】如果存储的字符串长度几乎相等，使用-char定长字符串类型。" class="headerlink" title="6.【强制】如果存储的字符串长度几乎相等，使用 char定长字符串类型。"></a>6.【强制】如果存储的字符串长度几乎相等，使用 char定长字符串类型。</h3><h3 id="7-【强制】varchar是可变长字符串，不预先分配存储空间，长度不要超过-5000，如果存储长度大于此值，定义字段类型为-text，独立出来一张表，用主键来对应，避免影响其它字段索引效率。"><a href="#7-【强制】varchar是可变长字符串，不预先分配存储空间，长度不要超过-5000，如果存储长度大于此值，定义字段类型为-text，独立出来一张表，用主键来对应，避免影响其它字段索引效率。" class="headerlink" title="7.【强制】varchar是可变长字符串，不预先分配存储空间，长度不要超过 5000，如果存储长度大于此值，定义字段类型为 text，独立出来一张表，用主键来对应，避免影响其它字段索引效率。"></a>7.【强制】varchar是可变长字符串，不预先分配存储空间，长度不要超过 5000，如果存储长度大于此值，定义字段类型为 text，独立出来一张表，用主键来对应，避免影响其它字段索引效率。</h3><h3 id="8-【推荐】表的命名最好是加上“业务名称-表的作用”。"><a href="#8-【推荐】表的命名最好是加上“业务名称-表的作用”。" class="headerlink" title="8.【推荐】表的命名最好是加上“业务名称_表的作用”。"></a>8.【推荐】表的命名最好是加上“业务名称_表的作用”。</h3><h3 id="9-【推荐】字段允许适当冗余，以提高查询性能，但必须考虑数据一致。"><a href="#9-【推荐】字段允许适当冗余，以提高查询性能，但必须考虑数据一致。" class="headerlink" title="9.【推荐】字段允许适当冗余，以提高查询性能，但必须考虑数据一致。"></a>9.【推荐】字段允许适当冗余，以提高查询性能，但必须考虑数据一致。</h3><p>冗余字段应遵循：</p>
+<p>&emsp;1）不是频繁修改的字段。</p>
+<p>&emsp;2）不是 varchar 超长字段，更不能是 text 字段。</p>
+<p>正例：商品类目名称使用频率高，字段长度短，名称基本一成不变，可在相关联的表中冗余存储类目名称，避免关联查询。</p>
+<h2 id="（二）索引约定"><a href="#（二）索引约定" class="headerlink" title="（二）索引约定"></a>（二）索引约定</h2><h3 id="1-【强制】超过三个表禁止-join。需要join的字段，数据类型必须绝对一致；多表关联查询时，保证被关联的字段需要有索引。"><a href="#1-【强制】超过三个表禁止-join。需要join的字段，数据类型必须绝对一致；多表关联查询时，保证被关联的字段需要有索引。" class="headerlink" title="1.【强制】超过三个表禁止 join。需要join的字段，数据类型必须绝对一致；多表关联查询时，保证被关联的字段需要有索引。"></a>1.【强制】超过三个表禁止 join。需要join的字段，数据类型必须绝对一致；多表关联查询时，保证被关联的字段需要有索引。</h3><p>说明：即使双表 join 也要注意表索引、SQL 性能。</p>
+<h3 id="2-【强制】在varchar字段上建立索引时，必须指定索引长度，没必要对全字段建立索引，根据实际文本区分度决定索引长度即可。"><a href="#2-【强制】在varchar字段上建立索引时，必须指定索引长度，没必要对全字段建立索引，根据实际文本区分度决定索引长度即可。" class="headerlink" title="2.【强制】在varchar字段上建立索引时，必须指定索引长度，没必要对全字段建立索引，根据实际文本区分度决定索引长度即可。"></a>2.【强制】在varchar字段上建立索引时，必须指定索引长度，没必要对全字段建立索引，根据实际文本区分度决定索引长度即可。</h3><p>说明：索引的长度与区分度是一对矛盾体，一般对字符串类型数据，长度为 20 的索引，区分度会高达 90%以上，可以使用 count(distinct left(列名, 索引长度))/count(*)的区分度<br>来确定。</p>
+<h3 id="3-【推荐】页面搜索严禁左模糊或者全模糊，如果需要请走搜索引擎来解决。"><a href="#3-【推荐】页面搜索严禁左模糊或者全模糊，如果需要请走搜索引擎来解决。" class="headerlink" title="3.【推荐】页面搜索严禁左模糊或者全模糊，如果需要请走搜索引擎来解决。"></a>3.【推荐】页面搜索严禁左模糊或者全模糊，如果需要请走搜索引擎来解决。</h3><p>说明：索引文件具有B-Tree的最左前缀匹配特性，如果左边的值未确定，那么无法使用此索<br>引。</p>
+<h3 id="4-【推荐】如果有-order-by的场景，请注意利用索引的有序性。order-by最后的字段是组合索引的一部分，并且放在索引组合顺序的最后，避免出现-file-sort-的情况，影响查询性能。"><a href="#4-【推荐】如果有-order-by的场景，请注意利用索引的有序性。order-by最后的字段是组合索引的一部分，并且放在索引组合顺序的最后，避免出现-file-sort-的情况，影响查询性能。" class="headerlink" title="4.【推荐】如果有 order by的场景，请注意利用索引的有序性。order by最后的字段是组合索引的一部分，并且放在索引组合顺序的最后，避免出现 file_sort 的情况，影响查询性能。"></a>4.【推荐】如果有 order by的场景，请注意利用索引的有序性。order by最后的字段是组合索引的一部分，并且放在索引组合顺序的最后，避免出现 file_sort 的情况，影响查询性能。</h3><p>正例：where a=? and b=? order by c; 索引：a_b_c</p>
+<p>反例：索引中有范围查找，那么索引有序性无法利用，如：WHERE a&gt;10 ORDER BY b; 索引<br>a_b 无法排序。</p>
+<h3 id="5-【推荐】利用延迟关联或者子查询优化超多分页场景。"><a href="#5-【推荐】利用延迟关联或者子查询优化超多分页场景。" class="headerlink" title="5.【推荐】利用延迟关联或者子查询优化超多分页场景。"></a>5.【推荐】利用延迟关联或者子查询优化超多分页场景。</h3><p>说明：MySQL 并不是跳过 offset 行，而是取 offset+N 行，然后返回放弃前 offset 行，返回N行，那当offset特别大的时候，效率就非常的低下，要么控制返回的总页数，要么对超过特定阈值的页数进行 SQL 改写。</p>
+<p>正例：先快速定位需要获取的 id 段，然后再关联：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT 100000,20 ) b where a.id=b.id</span><br></pre></td></tr></table></figure></p>
+<h3 id="6-【推荐】建组合索引的时候，区分度最高的在最左边。"><a href="#6-【推荐】建组合索引的时候，区分度最高的在最左边。" class="headerlink" title="6.【推荐】建组合索引的时候，区分度最高的在最左边。"></a>6.【推荐】建组合索引的时候，区分度最高的在最左边。</h3><p>正例：如果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">where a=? and b=?</span><br></pre></td></tr></table></figure></p>
+<p>，a列的几乎接近于唯一值，那么只需要单建idx_a索引即可。</p>
+<p>说明：存在非等号和等号混合判断条件时，在建索引时，请把等号条件的列前置。如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">where a&gt;?and b=?</span><br></pre></td></tr></table></figure></p>
+<p>那么即使 a 的区分度更高，也必须把 b 放在索引的最前列。</p>
+<h2 id="三-SQL语句约定"><a href="#三-SQL语句约定" class="headerlink" title="(三)SQL语句约定"></a>(三)SQL语句约定</h2><h3 id="1-【强制】不得使用外键与级联，一切外键概念必须在应用层解决。"><a href="#1-【强制】不得使用外键与级联，一切外键概念必须在应用层解决。" class="headerlink" title="1.【强制】不得使用外键与级联，一切外键概念必须在应用层解决。"></a>1.【强制】不得使用外键与级联，一切外键概念必须在应用层解决。</h3><p>说明：以学生和成绩的关系为例，学生表中的student_id是主键，那么成绩表中的student_id则为外键。如果更新学生表中的 student_id，同时触发成绩表中的 student_id 更新，即为级联更新。外键与级联更新适用于单机低并发，不适合分布式、高并发集群；级联更新是强阻塞，存在数据库更新风暴的风险；外键影响数据库的插入速度。</p>
+<h3 id="2-【强制】不要使用-count-列名-或-count-常量-来替代-count-，count-是-SQL92-定义的标准统计行数的语法，跟数据库无关，跟-NULL-和非-NULL-无关。"><a href="#2-【强制】不要使用-count-列名-或-count-常量-来替代-count-，count-是-SQL92-定义的标准统计行数的语法，跟数据库无关，跟-NULL-和非-NULL-无关。" class="headerlink" title="2.【强制】不要使用 count(列名)或 count(常量)来替代 count()，count()是 SQL92 定义的标准统计行数的语法，跟数据库无关，跟 NULL 和非 NULL 无关。"></a>2.【强制】不要使用 count(列名)或 count(常量)来替代 count(<em>)，count(</em>)是 SQL92 定义的标准统计行数的语法，跟数据库无关，跟 NULL 和非 NULL 无关。</h3><p>说明：count(*)会统计值为 NULL 的行，而 count(列名)不会统计此列为 NULL 值的行。</p>
+<h3 id="3-【强制】当某一列的值全是-NULL-时，count-col-的返回结果为-0，但-sum-col-的返回结果为NULL，因此使用-sum-时需注意-NPE-问题。"><a href="#3-【强制】当某一列的值全是-NULL-时，count-col-的返回结果为-0，但-sum-col-的返回结果为NULL，因此使用-sum-时需注意-NPE-问题。" class="headerlink" title="3.【强制】当某一列的值全是 NULL 时，count(col)的返回结果为 0，但 sum(col)的返回结果为NULL，因此使用 sum()时需注意 NPE 问题。"></a>3.【强制】当某一列的值全是 NULL 时，count(col)的返回结果为 0，但 sum(col)的返回结果为NULL，因此使用 sum()时需注意 NPE 问题。</h3><p>正例：可以使用如下方式来避免 sum 的 NPE 问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT IF(ISNULL(SUM(g)),0,SUM(g)) FROM table;</span><br></pre></td></tr></table></figure></p>
+<h3 id="4-【强制】在代码中写分页查询逻辑时，若-count-为-0-应直接返回，避免执行后面的分页语句。"><a href="#4-【强制】在代码中写分页查询逻辑时，若-count-为-0-应直接返回，避免执行后面的分页语句。" class="headerlink" title="4.【强制】在代码中写分页查询逻辑时，若 count 为 0 应直接返回，避免执行后面的分页语句。"></a>4.【强制】在代码中写分页查询逻辑时，若 count 为 0 应直接返回，避免执行后面的分页语句。</h3><h3 id="5-【强制】禁止使用存储过程，存储过程难以调试和扩展，更没有移植性。"><a href="#5-【强制】禁止使用存储过程，存储过程难以调试和扩展，更没有移植性。" class="headerlink" title="5.【强制】禁止使用存储过程，存储过程难以调试和扩展，更没有移植性。"></a>5.【强制】禁止使用存储过程，存储过程难以调试和扩展，更没有移植性。</h3><h3 id="6-【强制】数据订正时，删除和修改记录时，要先-select，避免出现误删除，确认无误才能执"><a href="#6-【强制】数据订正时，删除和修改记录时，要先-select，避免出现误删除，确认无误才能执" class="headerlink" title="6.【强制】数据订正时，删除和修改记录时，要先 select，避免出现误删除，确认无误才能执"></a>6.【强制】数据订正时，删除和修改记录时，要先 select，避免出现误删除，确认无误才能执</h3><p>行更新语句。</p>
+<h3 id="7-【推荐】in-操作能避免则避免，若实在避免不了，需要仔细评估-in-后边的集合元素数量，控"><a href="#7-【推荐】in-操作能避免则避免，若实在避免不了，需要仔细评估-in-后边的集合元素数量，控" class="headerlink" title="7.【推荐】in 操作能避免则避免，若实在避免不了，需要仔细评估 in 后边的集合元素数量，控"></a>7.【推荐】in 操作能避免则避免，若实在避免不了，需要仔细评估 in 后边的集合元素数量，控</h3><p>制在 1000 个之内。</p>
+<h3 id="8-【参考】如果有全球化需要，所有的字符存储与表示，均以-utf-8-编码，注意字符统计函数的区别。"><a href="#8-【参考】如果有全球化需要，所有的字符存储与表示，均以-utf-8-编码，注意字符统计函数的区别。" class="headerlink" title="8.【参考】如果有全球化需要，所有的字符存储与表示，均以 utf-8 编码，注意字符统计函数的区别。"></a>8.【参考】如果有全球化需要，所有的字符存储与表示，均以 utf-8 编码，注意字符统计函数的区别。</h3><p>说明：</p>
+<ul>
+<li>SELECT LENGTH(“轻松工作”)； 返回为 12</li>
+<li>SELECT CHARACTER_LENGTH(“轻松工作”)； 返回为 4</li>
+</ul>
+<p>如果需要存储表情，那么选择 utfmb4 来进行存储，注意它与 utf-8 编码的区别。</p>
+<h2 id="四-ORM-映射"><a href="#四-ORM-映射" class="headerlink" title="(四)ORM 映射"></a>(四)ORM 映射</h2><h3 id="1-【强制】在表查询中，一律不要使用-作为查询的字段列表，需要哪些字段必须明确写明。"><a href="#1-【强制】在表查询中，一律不要使用-作为查询的字段列表，需要哪些字段必须明确写明。" class="headerlink" title="1.【强制】在表查询中，一律不要使用 *作为查询的字段列表，需要哪些字段必须明确写明。"></a>1.【强制】在表查询中，一律不要使用 *作为查询的字段列表，需要哪些字段必须明确写明。</h3><p>说明：</p>
+<pre><code>1）增加查询分析器解析成本。
+2）增减字段容易与 resultMap 配置不一致。
+</code></pre><h3 id="2-【强制】不要用-resultClass-当返回参数，即使所有类属性名与数据库字段一一对应，也需要定义；反过来，每一个表也必然有一个与之对应。"><a href="#2-【强制】不要用-resultClass-当返回参数，即使所有类属性名与数据库字段一一对应，也需要定义；反过来，每一个表也必然有一个与之对应。" class="headerlink" title="2.【强制】不要用 resultClass 当返回参数，即使所有类属性名与数据库字段一一对应，也需要定义；反过来，每一个表也必然有一个与之对应。"></a>2.【强制】不要用 resultClass 当返回参数，即使所有类属性名与数据库字段一一对应，也需要定义；反过来，每一个表也必然有一个与之对应。</h3><p>说明：配置映射关系，使字段与 DO 类解耦，方便维护。</p>
+<h3 id="3-【强制】sql-xml-配置参数使用：-，-param-不要使用-此种方式容易出现-SQL-注入。"><a href="#3-【强制】sql-xml-配置参数使用：-，-param-不要使用-此种方式容易出现-SQL-注入。" class="headerlink" title="3.【强制】sql.xml 配置参数使用：#{}，#param# 不要使用${} 此种方式容易出现 SQL 注入。"></a>3.【强制】sql.xml 配置参数使用：#{}，#param# 不要使用${} 此种方式容易出现 SQL 注入。</h3><h3 id="4-【推荐】不要直接拿-HashMap-与-Hashtable-作为查询结果集的输出。"><a href="#4-【推荐】不要直接拿-HashMap-与-Hashtable-作为查询结果集的输出。" class="headerlink" title="4.【推荐】不要直接拿 HashMap 与 Hashtable 作为查询结果集的输出。"></a>4.【推荐】不要直接拿 HashMap 与 Hashtable 作为查询结果集的输出。</h3><p>说明：resultClass=”Hashtable”，会置入字段名和属性值，但是值的类型不可控。</p>
+<h3 id="5-【推荐】不要写一个大而全的数据更新接口。传入为-POJO类，不管是不是自己的目标更新字段，都进行-update-table-set-c1-value1-c2-value2-c3-value3-这是不对的。执行-SQL时，不要更新无改动的字段，一是易出错；二是效率低；三是增加binlog存储"><a href="#5-【推荐】不要写一个大而全的数据更新接口。传入为-POJO类，不管是不是自己的目标更新字段，都进行-update-table-set-c1-value1-c2-value2-c3-value3-这是不对的。执行-SQL时，不要更新无改动的字段，一是易出错；二是效率低；三是增加binlog存储" class="headerlink" title="5.【推荐】不要写一个大而全的数据更新接口。传入为 POJO类，不管是不是自己的目标更新字段，都进行 update table set c1=value1,c2=value2,c3=value3; 这是不对的。执行 SQL时，不要更新无改动的字段，一是易出错；二是效率低；三是增加binlog存储."></a>5.【推荐】不要写一个大而全的数据更新接口。传入为 POJO类，不管是不是自己的目标更新字段，都进行 update table set c1=value1,c2=value2,c3=value3; 这是不对的。执行 SQL时，不要更新无改动的字段，一是易出错；二是效率低；三是增加binlog存储.</h3><h1 id="2-工程结构"><a href="#2-工程结构" class="headerlink" title="2. 工程结构"></a>2. 工程结构</h1><h2 id="一-应用分层"><a href="#一-应用分层" class="headerlink" title="(一)应用分层"></a>(一)应用分层</h2><h3 id="1-【推荐】图中默认上层依赖于下层，箭头关系表示可直接依赖，如：开放接口层可以依赖于Web-层，也可以直接依赖于-Service-层，依此类推："><a href="#1-【推荐】图中默认上层依赖于下层，箭头关系表示可直接依赖，如：开放接口层可以依赖于Web-层，也可以直接依赖于-Service-层，依此类推：" class="headerlink" title="1. 【推荐】图中默认上层依赖于下层，箭头关系表示可直接依赖，如：开放接口层可以依赖于Web 层，也可以直接依赖于 Service 层，依此类推："></a>1. 【推荐】图中默认上层依赖于下层，箭头关系表示可直接依赖，如：开放接口层可以依赖于Web 层，也可以直接依赖于 Service 层，依此类推：</h3><p><img src="images/java-file-001.png" alt></p>
+<ul>
+<li><strong>开放接口层</strong>：可直接封装 Service 方法暴露成 RPC 接口；通过 Web 封装成 http 接口；进行网关安全控制、流量控制等。</li>
+<li><strong>终端显示层</strong>：各个端的模板渲染并执行显示的层。当前主要是 velocity 渲染，JS 渲染，JSP 渲染，移动端展示等。</li>
+<li><strong>Web层</strong>：主要是对访问控制进行转发，各类基本参数校验，或者不复用的业务简单处理等。</li>
+<li><strong>Service 层</strong>：相对具体的业务逻辑服务层。</li>
+<li><p><strong>Manager 层</strong>：通用业务处理层，它有如下特征：</p>
+<p>  &emsp;1） 对第三方平台封装的层，预处理返回结果及转化异常信息；</p>
+<p>  &emsp;2） 对 Service 层通用能力的下沉，如缓存方案、中间件通用处理；</p>
+<p>  &emsp;3） 与 DAO 层交互，对多个 DAO 的组合复用。</p>
+</li>
+<li><strong>DAO 层</strong>：数据访问层，与底层 MySQL、Oracle、Hbase 等进行数据交互。<br> 外部接口或第三方平台：包括其它部门 RPC 开放接口，基础平台，其它公司的 HTTP 接口。</li>
+</ul>
+<h2 id="二-二方库依赖"><a href="#二-二方库依赖" class="headerlink" title="(二)二方库依赖"></a>(二)二方库依赖</h2><h3 id="1-【强制】定义-GAV-遵从以下规则："><a href="#1-【强制】定义-GAV-遵从以下规则：" class="headerlink" title="1. 【强制】定义 GAV 遵从以下规则："></a>1. 【强制】定义 GAV 遵从以下规则：</h3><p>&emsp;1） GroupID 格式：com.{公司/BU }.业务线.[子业务线]，最多 4 级。<br>说明：{公司/BU} 例如：alibaba/taobao/tmall/aliexpress 等 BU 一级；子业务线可选。<br>正例：com.taobao.jstorm 或 com.alibaba.dubbo.register</p>
+<p>&emsp;2） ArtifactID 格式：产品线名-模块名。语义不重复不遗漏，先到中央仓库去查证一下。<br>正例：dubbo-client / fastjson-api / jstorm-tool</p>
+<p>&emsp;3） Version：详细规定参考下方。</p>
+<h3 id="2-【强制】二方库版本号命名方式：主版本号-次版本号-修订号"><a href="#2-【强制】二方库版本号命名方式：主版本号-次版本号-修订号" class="headerlink" title="2. 【强制】二方库版本号命名方式：主版本号.次版本号.修订号"></a>2. 【强制】二方库版本号命名方式：主版本号.次版本号.修订号</h3><p>&emsp;1） 主版本号：产品方向改变，或者大规模 API 不兼容，或者架构不兼容升级。</p>
+<p>&emsp;2） 次版本号：保持相对兼容性，增加主要功能特性，影响范围极小的 API 不兼容修改。</p>
+<p>&emsp;3） 修订号：保持完全兼容性，修复 BUG、新增次要功能特性等。</p>
+<p>说明：注意起始版本号必须为：1.0.0，而不是 0.0.1正式发布的类库必须先去中央仓库进<br>行查证，使版本号有延续性，正式版本号不允许覆盖升级。如当前版本：1.3.3，那么下一个合理的版本号：1.3.4 或 1.4.0 或 2.0.0</p>
+<h3 id="3-【强制】线上应用不要依赖-SNAPSHOT-版本（安全包除外）。"><a href="#3-【强制】线上应用不要依赖-SNAPSHOT-版本（安全包除外）。" class="headerlink" title="3. 【强制】线上应用不要依赖 SNAPSHOT 版本（安全包除外）。"></a>3. 【强制】线上应用不要依赖 SNAPSHOT 版本（安全包除外）。</h3><p>说明：不依赖SNAPSHOT版本是保证应用发布的幂等性。另外，也可以加快编译时的打包构建。</p>
+<h1 id="3-编程约定"><a href="#3-编程约定" class="headerlink" title="3. 编程约定"></a>3. 编程约定</h1>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/开发规范/" rel="tag"># 开发规范</a>
+          
+            <a href="/tags/后端/" rel="tag"># 后端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/04/springboot-不同环境的编译打包运行/" rel="next" title="springboot-不同环境的编译打包运行">
+                <i class="fa fa-chevron-left"></i> springboot-不同环境的编译打包运行
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/04/RESTful接口设计规范/" rel="prev" title="RESTful接口设计规范">
+                RESTful接口设计规范 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/default_avatar.jpg" alt="Wanglv Yihua">
+            
+              <p class="site-author-name" itemprop="name">Wanglv Yihua</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">197</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一-mysql数据库"><span class="nav-number">1.</span> <span class="nav-text">一. mysql数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#（一）建表约定"><span class="nav-number">1.1.</span> <span class="nav-text">（一）建表约定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-【强制】小数类型为-decimal，在需要精确经度的时候禁止使用-float和double。"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.【强制】小数类型为 decimal，在需要精确经度的时候禁止使用 float和double。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-【强制】表示状态类型等的数字可枚举类的字段，数据类型应该使用tinyint。如果字段为非负数，数据类型是unsigned-tinyint"><span class="nav-number">1.1.3.</span> <span class="nav-text">3.【强制】表示状态类型等的数字可枚举类的字段，数据类型应该使用tinyint。如果字段为非负数，数据类型是unsigned tinyint.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-【强制】表名不使用复数名词"><span class="nav-number">1.1.4.</span> <span class="nav-text">4.【强制】表名不使用复数名词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-【强制】主键索引名为-pk-字段名；唯一索引名为-uk-字段名；普通索引名则为-idx-字段名。"><span class="nav-number">1.1.5.</span> <span class="nav-text">5.【强制】主键索引名为 pk_字段名；唯一索引名为 uk_字段名；普通索引名则为 idx_字段名。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-【强制】如果存储的字符串长度几乎相等，使用-char定长字符串类型。"><span class="nav-number">1.1.6.</span> <span class="nav-text">6.【强制】如果存储的字符串长度几乎相等，使用 char定长字符串类型。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-【强制】varchar是可变长字符串，不预先分配存储空间，长度不要超过-5000，如果存储长度大于此值，定义字段类型为-text，独立出来一张表，用主键来对应，避免影响其它字段索引效率。"><span class="nav-number">1.1.7.</span> <span class="nav-text">7.【强制】varchar是可变长字符串，不预先分配存储空间，长度不要超过 5000，如果存储长度大于此值，定义字段类型为 text，独立出来一张表，用主键来对应，避免影响其它字段索引效率。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-【推荐】表的命名最好是加上“业务名称-表的作用”。"><span class="nav-number">1.1.8.</span> <span class="nav-text">8.【推荐】表的命名最好是加上“业务名称_表的作用”。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-【推荐】字段允许适当冗余，以提高查询性能，但必须考虑数据一致。"><span class="nav-number">1.1.9.</span> <span class="nav-text">9.【推荐】字段允许适当冗余，以提高查询性能，但必须考虑数据一致。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（二）索引约定"><span class="nav-number">1.2.</span> <span class="nav-text">（二）索引约定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-【强制】超过三个表禁止-join。需要join的字段，数据类型必须绝对一致；多表关联查询时，保证被关联的字段需要有索引。"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.【强制】超过三个表禁止 join。需要join的字段，数据类型必须绝对一致；多表关联查询时，保证被关联的字段需要有索引。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-【强制】在varchar字段上建立索引时，必须指定索引长度，没必要对全字段建立索引，根据实际文本区分度决定索引长度即可。"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.【强制】在varchar字段上建立索引时，必须指定索引长度，没必要对全字段建立索引，根据实际文本区分度决定索引长度即可。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-【推荐】页面搜索严禁左模糊或者全模糊，如果需要请走搜索引擎来解决。"><span class="nav-number">1.2.3.</span> <span class="nav-text">3.【推荐】页面搜索严禁左模糊或者全模糊，如果需要请走搜索引擎来解决。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-【推荐】如果有-order-by的场景，请注意利用索引的有序性。order-by最后的字段是组合索引的一部分，并且放在索引组合顺序的最后，避免出现-file-sort-的情况，影响查询性能。"><span class="nav-number">1.2.4.</span> <span class="nav-text">4.【推荐】如果有 order by的场景，请注意利用索引的有序性。order by最后的字段是组合索引的一部分，并且放在索引组合顺序的最后，避免出现 file_sort 的情况，影响查询性能。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-【推荐】利用延迟关联或者子查询优化超多分页场景。"><span class="nav-number">1.2.5.</span> <span class="nav-text">5.【推荐】利用延迟关联或者子查询优化超多分页场景。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-【推荐】建组合索引的时候，区分度最高的在最左边。"><span class="nav-number">1.2.6.</span> <span class="nav-text">6.【推荐】建组合索引的时候，区分度最高的在最左边。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-SQL语句约定"><span class="nav-number">1.3.</span> <span class="nav-text">(三)SQL语句约定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-【强制】不得使用外键与级联，一切外键概念必须在应用层解决。"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.【强制】不得使用外键与级联，一切外键概念必须在应用层解决。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-【强制】不要使用-count-列名-或-count-常量-来替代-count-，count-是-SQL92-定义的标准统计行数的语法，跟数据库无关，跟-NULL-和非-NULL-无关。"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.【强制】不要使用 count(列名)或 count(常量)来替代 count()，count()是 SQL92 定义的标准统计行数的语法，跟数据库无关，跟 NULL 和非 NULL 无关。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-【强制】当某一列的值全是-NULL-时，count-col-的返回结果为-0，但-sum-col-的返回结果为NULL，因此使用-sum-时需注意-NPE-问题。"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.【强制】当某一列的值全是 NULL 时，count(col)的返回结果为 0，但 sum(col)的返回结果为NULL，因此使用 sum()时需注意 NPE 问题。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-【强制】在代码中写分页查询逻辑时，若-count-为-0-应直接返回，避免执行后面的分页语句。"><span class="nav-number">1.3.4.</span> <span class="nav-text">4.【强制】在代码中写分页查询逻辑时，若 count 为 0 应直接返回，避免执行后面的分页语句。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-【强制】禁止使用存储过程，存储过程难以调试和扩展，更没有移植性。"><span class="nav-number">1.3.5.</span> <span class="nav-text">5.【强制】禁止使用存储过程，存储过程难以调试和扩展，更没有移植性。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-【强制】数据订正时，删除和修改记录时，要先-select，避免出现误删除，确认无误才能执"><span class="nav-number">1.3.6.</span> <span class="nav-text">6.【强制】数据订正时，删除和修改记录时，要先 select，避免出现误删除，确认无误才能执</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-【推荐】in-操作能避免则避免，若实在避免不了，需要仔细评估-in-后边的集合元素数量，控"><span class="nav-number">1.3.7.</span> <span class="nav-text">7.【推荐】in 操作能避免则避免，若实在避免不了，需要仔细评估 in 后边的集合元素数量，控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-【参考】如果有全球化需要，所有的字符存储与表示，均以-utf-8-编码，注意字符统计函数的区别。"><span class="nav-number">1.3.8.</span> <span class="nav-text">8.【参考】如果有全球化需要，所有的字符存储与表示，均以 utf-8 编码，注意字符统计函数的区别。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-ORM-映射"><span class="nav-number">1.4.</span> <span class="nav-text">(四)ORM 映射</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-【强制】在表查询中，一律不要使用-作为查询的字段列表，需要哪些字段必须明确写明。"><span class="nav-number">1.4.1.</span> <span class="nav-text">1.【强制】在表查询中，一律不要使用 *作为查询的字段列表，需要哪些字段必须明确写明。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-【强制】不要用-resultClass-当返回参数，即使所有类属性名与数据库字段一一对应，也需要定义；反过来，每一个表也必然有一个与之对应。"><span class="nav-number">1.4.2.</span> <span class="nav-text">2.【强制】不要用 resultClass 当返回参数，即使所有类属性名与数据库字段一一对应，也需要定义；反过来，每一个表也必然有一个与之对应。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-【强制】sql-xml-配置参数使用：-，-param-不要使用-此种方式容易出现-SQL-注入。"><span class="nav-number">1.4.3.</span> <span class="nav-text">3.【强制】sql.xml 配置参数使用：#{}，#param# 不要使用${} 此种方式容易出现 SQL 注入。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-【推荐】不要直接拿-HashMap-与-Hashtable-作为查询结果集的输出。"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.【推荐】不要直接拿 HashMap 与 Hashtable 作为查询结果集的输出。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-【推荐】不要写一个大而全的数据更新接口。传入为-POJO类，不管是不是自己的目标更新字段，都进行-update-table-set-c1-value1-c2-value2-c3-value3-这是不对的。执行-SQL时，不要更新无改动的字段，一是易出错；二是效率低；三是增加binlog存储"><span class="nav-number">1.4.5.</span> <span class="nav-text">5.【推荐】不要写一个大而全的数据更新接口。传入为 POJO类，不管是不是自己的目标更新字段，都进行 update table set c1=value1,c2=value2,c3=value3; 这是不对的。执行 SQL时，不要更新无改动的字段，一是易出错；二是效率低；三是增加binlog存储.</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-工程结构"><span class="nav-number">2.</span> <span class="nav-text">2. 工程结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-应用分层"><span class="nav-number">2.1.</span> <span class="nav-text">(一)应用分层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-【推荐】图中默认上层依赖于下层，箭头关系表示可直接依赖，如：开放接口层可以依赖于Web-层，也可以直接依赖于-Service-层，依此类推："><span class="nav-number">2.1.1.</span> <span class="nav-text">1. 【推荐】图中默认上层依赖于下层，箭头关系表示可直接依赖，如：开放接口层可以依赖于Web 层，也可以直接依赖于 Service 层，依此类推：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-二方库依赖"><span class="nav-number">2.2.</span> <span class="nav-text">(二)二方库依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-【强制】定义-GAV-遵从以下规则："><span class="nav-number">2.2.1.</span> <span class="nav-text">1. 【强制】定义 GAV 遵从以下规则：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-【强制】二方库版本号命名方式：主版本号-次版本号-修订号"><span class="nav-number">2.2.2.</span> <span class="nav-text">2. 【强制】二方库版本号命名方式：主版本号.次版本号.修订号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-【强制】线上应用不要依赖-SNAPSHOT-版本（安全包除外）。"><span class="nav-number">2.2.3.</span> <span class="nav-text">3. 【强制】线上应用不要依赖 SNAPSHOT 版本（安全包除外）。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-编程约定"><span class="nav-number">3.</span> <span class="nav-text">3. 编程约定</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wanglv Yihua</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.4.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
