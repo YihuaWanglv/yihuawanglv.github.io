@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Mysql自带的Partition分区方案好处： 优势1，数据库操作变更简单；优势2，分区后程序不需要修改，数据库分区的表使用和分区前一致；优势3，分区后，查询效率没有降低。 1. 建立分区步骤现在假设biz_process和biz_follow是2张大表，现在要对它们进行mysql数据库表分区 有2种推荐的方式进行表分区：  一是，先进行备份，再对需要分区的表直接使用ALTER TABLE进行分">
+<meta name="keywords" content="mysql,PARTITION,表分区,分表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql的PARTITION表分区要点">
+<meta property="og:url" content="http://localhost:4000/2019/11/18/Mysql的PARTITION表分区要点/index.html">
+<meta property="og:site_name" content="iyihua">
+<meta property="og:description" content="Mysql自带的Partition分区方案好处： 优势1，数据库操作变更简单；优势2，分区后程序不需要修改，数据库分区的表使用和分区前一致；优势3，分区后，查询效率没有降低。 1. 建立分区步骤现在假设biz_process和biz_follow是2张大表，现在要对它们进行mysql数据库表分区 有2种推荐的方式进行表分区：  一是，先进行备份，再对需要分区的表直接使用ALTER TABLE进行分">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-18T04:51:40.184Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql的PARTITION表分区要点">
+<meta name="twitter:description" content="Mysql自带的Partition分区方案好处： 优势1，数据库操作变更简单；优势2，分区后程序不需要修改，数据库分区的表使用和分区前一致；优势3，分区后，查询效率没有降低。 1. 建立分区步骤现在假设biz_process和biz_follow是2张大表，现在要对它们进行mysql数据库表分区 有2种推荐的方式进行表分区：  一是，先进行备份，再对需要分区的表直接使用ALTER TABLE进行分">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="iyihua" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://localhost:4000/2019/11/18/Mysql的PARTITION表分区要点/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Mysql的PARTITION表分区要点 | iyihua</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iyihua</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2019/11/18/Mysql的PARTITION表分区要点/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mysql的PARTITION表分区要点
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-18 11:46:18 / 修改时间：12:51:40" itemprop="dateCreated datePublished" datetime="2019-11-18T11:46:18+08:00">2019-11-18</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Mysql自带的Partition分区方案好处：</p>
+<p>优势1，数据库操作变更简单；<br>优势2，分区后程序不需要修改，数据库分区的表使用和分区前一致；<br>优势3，分区后，查询效率没有降低。</p>
+<h1 id="1-建立分区步骤"><a href="#1-建立分区步骤" class="headerlink" title="1. 建立分区步骤"></a>1. 建立分区步骤</h1><p>现在假设<code>biz_process</code>和<code>biz_follow</code>是2张大表，现在要对它们进行mysql数据库表分区</p>
+<p>有2种推荐的方式进行表分区：</p>
+<ul>
+<li><p>一是，先进行备份，再对需要分区的表直接使用<code>ALTER TABLE</code>进行分区设置</p>
+</li>
+<li><p>二是，先创建使用别名的分区表，再复制数据进分区表，最后变更表名字原来的表和分区表切换。</p>
+</li>
+</ul>
+<h2 id="1-1-创建需要分区的表的备份"><a href="#1-1-创建需要分区的表的备份" class="headerlink" title="1.1 创建需要分区的表的备份"></a>1.1 创建需要分区的表的备份</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`biz_process_bak`</span> (</span><br><span class="line">  <span class="string">`process_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'流程编号'</span>,</span><br><span class="line">  <span class="string">`customer_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'客户编号'</span>,</span><br><span class="line">  <span class="string">`dept_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'业务部门编号'</span>,</span><br><span class="line">  <span class="string">`user_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'业务人员编号'</span>,</span><br><span class="line">  <span class="comment">--···建表语句</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_unicode_ci <span class="keyword">COMMENT</span>=<span class="string">'商机流程表'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`biz_follow_bak`</span> (</span><br><span class="line">  <span class="string">`follow_id`</span> <span class="built_in">bigint</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'跟进编号'</span>,</span><br><span class="line">  <span class="string">`customer_id`</span> <span class="built_in">bigint</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'客户编号'</span>,</span><br><span class="line">  <span class="string">`process_id`</span> <span class="built_in">bigint</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'流程编号'</span>,</span><br><span class="line">  <span class="comment">--···建表语句</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_unicode_ci <span class="keyword">COMMENT</span>=<span class="string">'客户跟进表'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> biz_process_bak <span class="keyword">select</span> * <span class="keyword">from</span> biz_process;</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> biz_follow_bak <span class="keyword">select</span> * <span class="keyword">from</span> biz_follow;</span><br></pre></td></tr></table></figure>
+<h2 id="1-2-创建别名分区表，并复制数据进分区表"><a href="#1-2-创建别名分区表，并复制数据进分区表" class="headerlink" title="1.2 创建别名分区表，并复制数据进分区表"></a>1.2 创建别名分区表，并复制数据进分区表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`biz_process_range`</span> (</span><br><span class="line">  <span class="string">`process_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'流程编号'</span>,</span><br><span class="line">  <span class="string">`customer_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'客户编号'</span>,</span><br><span class="line">  <span class="string">`dept_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'业务部门编号'</span>,</span><br><span class="line">  <span class="string">`user_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'业务人员编号'</span>,</span><br><span class="line">  <span class="comment">--···建表语句</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_unicode_ci <span class="keyword">COMMENT</span>=<span class="string">'商机流程表'</span> <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span>(process_id) (</span><br><span class="line">    <span class="keyword">PARTITION</span> p1 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p2 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">4000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p3 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">6000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p4 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">8000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p5 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">10000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p6 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">12000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p7 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">14000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p8 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">16000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p9 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">18000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p10 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">20000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p11 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (MAXVALUE) </span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`biz_follow_range`</span> (</span><br><span class="line">  <span class="string">`follow_id`</span> <span class="built_in">bigint</span>(<span class="number">11</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'跟进编号'</span>,</span><br><span class="line">  <span class="string">`customer_id`</span> <span class="built_in">bigint</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'客户编号'</span>,</span><br><span class="line">  <span class="string">`process_id`</span> <span class="built_in">bigint</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'流程编号'</span>,</span><br><span class="line">  <span class="comment">--···建表语句</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_unicode_ci <span class="keyword">COMMENT</span>=<span class="string">'客户跟进表'</span> <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span>(follow_id) (</span><br><span class="line">    <span class="keyword">PARTITION</span> p1 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p2 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">4000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p3 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">6000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p4 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">8000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p5 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">10000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p6 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">12000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p7 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">14000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p8 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">16000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p9 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">18000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p10 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">20000000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p11 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (MAXVALUE) </span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> biz_process_range <span class="keyword">select</span> * <span class="keyword">from</span> biz_process;</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> biz_follow_range <span class="keyword">select</span> * <span class="keyword">from</span> biz_follow;</span><br></pre></td></tr></table></figure>
+<h2 id="1-3-使用重命名快速把原表切换到分区表"><a href="#1-3-使用重命名快速把原表切换到分区表" class="headerlink" title="1.3 使用重命名快速把原表切换到分区表"></a>1.3 使用重命名快速把原表切换到分区表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RENAME</span> <span class="keyword">TABLE</span> biz_process <span class="keyword">TO</span> biz_process_tmp, biz_process_range <span class="keyword">TO</span> biz_process;</span><br><span class="line"><span class="keyword">RENAME</span> <span class="keyword">TABLE</span> biz_follow <span class="keyword">TO</span> biz_follow_tmp, biz_follow_range <span class="keyword">TO</span> biz_follow;</span><br></pre></td></tr></table></figure>
+<p>ps. 也可以直接使用ALTER TABLE的方式，直接为原来的表添加分区</p>
+<h1 id="2-关于分区新增和变更删除等操作"><a href="#2-关于分区新增和变更删除等操作" class="headerlink" title="2. 关于分区新增和变更删除等操作"></a>2. 关于分区新增和变更删除等操作</h1><h2 id="2-1-为当前表创建分区"><a href="#2-1-为当前表创建分区" class="headerlink" title="2.1 为当前表创建分区"></a>2.1 为当前表创建分区</h2><p>因为是对已有表进行改造，所以只能用 alter 的方式：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> stat</span><br><span class="line">    <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span>(<span class="keyword">TO_DAYS</span>(dt)) (</span><br><span class="line">        <span class="keyword">PARTITION</span> p0 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span>(<span class="number">0</span>),</span><br><span class="line">        <span class="keyword">PARTITION</span> p190214 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span>(<span class="keyword">TO_DAYS</span>(<span class="string">'2019-02-14'</span>)),</span><br><span class="line">        <span class="keyword">PARTITION</span> pm <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span>(MAXVALUE)</span><br><span class="line">    );</span><br></pre></td></tr></table></figure></p>
+<p>复制代码这里有2点要注意：</p>
+<ul>
+<li>一是 p0 分区，这是因为 MySQL（我是5.7版） 有个 bug，就是不管你查的数据在哪个区，它都会扫一下第一个区，我们每个区的数据都有几十万条，扫一下很是肉疼啊，所以为了避免不必要的扫描，直接弄个0数据分区就行了。</li>
+<li>二是 pm 分区，这个是最大分区。假如不要 pm，那你存 2019-02-15 的数据就会报错。所以 pm 实际上是给未来的数据一个预留的分区。</li>
+</ul>
+<h2 id="2-2-定期扩展分区"><a href="#2-2-定期扩展分区" class="headerlink" title="2.2 定期扩展分区"></a>2.2 定期扩展分区</h2><p>由于 MySQL 的分区并不能自己动态扩容，所以我们要写个代码为它动态的增加分区。</p>
+<p>增加分区需要用到 REORGANIZE 命令，它的作用是对某个分区重新分配。</p>
+<p>比如明天是 15 号，那我们要给 15 号也增加个分区，实际上就是把 pm 分区拆分成2个分区：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> stat</span><br><span class="line">    REORGANIZE <span class="keyword">PARTITION</span> pm <span class="keyword">INTO</span> (</span><br><span class="line">        <span class="keyword">PARTITION</span> p190215 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span>(<span class="keyword">TO_DAYS</span>(<span class="string">'2019-02-15'</span>)),</span><br><span class="line">        <span class="keyword">PARTITION</span> pm <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span>(MAXVALUE)</span><br><span class="line">    );</span><br></pre></td></tr></table></figure></p>
+<p>复制代码这里就涉及到一个问题，即如何获得当前表的所有分区？网上有挺多方法，但我试了下感觉还是先 <code>show create table stat</code>然后用正则匹配出所有分区更方便一点。</p>
+<h2 id="2-3-定期删除分区"><a href="#2-3-定期删除分区" class="headerlink" title="2.3 定期删除分区"></a>2.3 定期删除分区</h2><p>随着数据库越来越大，我们肯定是要清除旧的数据，同时也要清除旧的分区。<br>这个也比较简单：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> stat <span class="keyword">DROP</span> <span class="keyword">PARTITION</span> p190214, p190215</span><br></pre></td></tr></table></figure></p>
+<h1 id="3-附录：Mysql的Partition分区使用说明"><a href="#3-附录：Mysql的Partition分区使用说明" class="headerlink" title="3. 附录：Mysql的Partition分区使用说明"></a>3. 附录：Mysql的Partition分区使用说明</h1><h2 id="3-1-基于时间进行range分区例子："><a href="#3-1-基于时间进行range分区例子：" class="headerlink" title="3.1 基于时间进行range分区例子："></a>3.1 基于时间进行range分区例子：</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> my_range_datetime(</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span>,</span><br><span class="line">    hiredate DATETIME</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (<span class="keyword">YEAR</span>(hiredate) ) (</span><br><span class="line">    <span class="keyword">PARTITION</span> p1 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2011</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p2 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2012</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p3 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2013</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p4 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2014</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p5 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2015</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p6 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2016</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p7 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2017</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p8 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2018</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p9 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2019</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p10 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2020</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p11 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (MAXVALUE) </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="3-2-基于主键进行range分区例子：由于表如果设置了主键的话，分区的字段一定要属于主键，所以一般要么把分区字段添加为主键，要么就只能针对主键进行分区"><a href="#3-2-基于主键进行range分区例子：由于表如果设置了主键的话，分区的字段一定要属于主键，所以一般要么把分区字段添加为主键，要么就只能针对主键进行分区" class="headerlink" title="3.2 基于主键进行range分区例子：由于表如果设置了主键的话，分区的字段一定要属于主键，所以一般要么把分区字段添加为主键，要么就只能针对主键进行分区"></a>3.2 基于主键进行range分区例子：由于表如果设置了主键的话，分区的字段一定要属于主键，所以一般要么把分区字段添加为主键，要么就只能针对主键进行分区</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`range_process`</span> (</span><br><span class="line">  <span class="string">`process_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'流程编号'</span>,</span><br><span class="line">  <span class="string">`customer_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'客户编号'</span>,</span><br><span class="line">  <span class="string">`dept_id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'业务部门编号'</span>,</span><br><span class="line">  <span class="string">`memo`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'备注'</span>,</span><br><span class="line">  <span class="string">`create_time`</span> <span class="built_in">timestamp</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span> <span class="keyword">COMMENT</span> <span class="string">'创建时间'</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`process_id`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`IX_DEPT_ID`</span> (<span class="string">`dept_id`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`IX_CREATE_TIME`</span> (<span class="string">`create_time`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`IX_CUSTOMER_ID`</span> (<span class="string">`customer_id`</span>) <span class="keyword">USING</span> BTREE,</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`IX_MEMO`</span> (<span class="string">`memo`</span>) <span class="keyword">USING</span> BTREE</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_unicode_ci <span class="keyword">COMMENT</span>=<span class="string">'商机流程表'</span> <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span>(process_id) (</span><br><span class="line">    <span class="keyword">PARTITION</span> p1 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">1000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p2 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">2000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p3 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (<span class="number">3000</span>),</span><br><span class="line">    <span class="keyword">PARTITION</span> p4 <span class="keyword">VALUES</span> <span class="keyword">LESS</span> <span class="keyword">THAN</span> (MAXVALUE) </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="3-3-分区后，如果在查询时想要避免搜索所有分区，则最好在查询的where条件中添加分区字段作为过滤条件。哪怕是冗余的没有必要的过滤条件，对于定位分区还是有用的。"><a href="#3-3-分区后，如果在查询时想要避免搜索所有分区，则最好在查询的where条件中添加分区字段作为过滤条件。哪怕是冗余的没有必要的过滤条件，对于定位分区还是有用的。" class="headerlink" title="3.3 分区后，如果在查询时想要避免搜索所有分区，则最好在查询的where条件中添加分区字段作为过滤条件。哪怕是冗余的没有必要的过滤条件，对于定位分区还是有用的。"></a>3.3 分区后，如果在查询时想要避免搜索所有分区，则最好在查询的where条件中添加分区字段作为过滤条件。哪怕是冗余的没有必要的过滤条件，对于定位分区还是有用的。</h2><p>例如，普通查询<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; EXPLAIN PARTITIONS select * from range_process \G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: range_process</span><br><span class="line">   partitions: p1,p2,p3,p4</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 20</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: NULL</span><br><span class="line">1 row in set, 2 warnings (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>添加主键作为where条件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN PARTITIONS select * from range_process where process_id &gt; 3000 \G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: range_process</span><br><span class="line">   partitions: p4</span><br><span class="line">         type: range</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: PRIMARY</span><br><span class="line">      key_len: 8</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 10</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: Using where</span><br><span class="line">1 row in set, 2 warnings (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>在应用层，对于做了分区的大表，进行查询时，可以通过动态sql的方式，在需要优化的sql查询处加入分区字段作为where的过滤条件。</li>
+</ul>
+<h2 id="3-4-分区表使用的限制"><a href="#3-4-分区表使用的限制" class="headerlink" title="3.4 分区表使用的限制"></a>3.4 分区表使用的限制</h2><ul>
+<li>一个表最多只能有1024个分区</li>
+<li>主键和唯一索引的列，必须作为分区的字段</li>
+</ul>
+<h2 id="3-5-分区后，一般情况下，各种查询使用和join联表操作均正常使用，和分区前一致，但要注意几个问题"><a href="#3-5-分区后，一般情况下，各种查询使用和join联表操作均正常使用，和分区前一致，但要注意几个问题" class="headerlink" title="3.5 分区后，一般情况下，各种查询使用和join联表操作均正常使用，和分区前一致，但要注意几个问题"></a>3.5 分区后，一般情况下，各种查询使用和join联表操作均正常使用，和分区前一致，但要注意几个问题</h2><ul>
+<li>关于优化，应该尽量使用where条件，将检索的分区限制再少数分区中。</li>
+<li>（mysql5.5以上不需要考虑这个问题）NULL值会使分区过滤无效，并在分区中创建一个默认的第一个分区，从而导致所有查询都会默认去检索这个分区，所以，应该创建一个“无用”的第一个分区，导致数据无法落入这个分区，从而避免mysql查询每次检索第一个分区。mysql5.5以上不需要考虑这个问题，可以直接使用列本身进行分区，就不会有这个问题。</li>
+<li>对于大多数系统，100个左右的分区是可以接受的，不会有太大问题。</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+            <a href="/tags/PARTITION/" rel="tag"># PARTITION</a>
+          
+            <a href="/tags/表分区/" rel="tag"># 表分区</a>
+          
+            <a href="/tags/分表/" rel="tag"># 分表</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/18/配置Maven项目打包部署到Nexus私服/" rel="next" title="配置Maven项目打包部署到Nexus私服">
+                <i class="fa fa-chevron-left"></i> 配置Maven项目打包部署到Nexus私服
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/default_avatar.jpg" alt="Wanglv Yihua">
+            
+              <p class="site-author-name" itemprop="name">Wanglv Yihua</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">81</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">203</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-建立分区步骤"><span class="nav-number">1.</span> <span class="nav-text">1. 建立分区步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-创建需要分区的表的备份"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 创建需要分区的表的备份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-创建别名分区表，并复制数据进分区表"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 创建别名分区表，并复制数据进分区表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-使用重命名快速把原表切换到分区表"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 使用重命名快速把原表切换到分区表</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-关于分区新增和变更删除等操作"><span class="nav-number">2.</span> <span class="nav-text">2. 关于分区新增和变更删除等操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-为当前表创建分区"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 为当前表创建分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-定期扩展分区"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 定期扩展分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-定期删除分区"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 定期删除分区</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-附录：Mysql的Partition分区使用说明"><span class="nav-number">3.</span> <span class="nav-text">3. 附录：Mysql的Partition分区使用说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-基于时间进行range分区例子："><span class="nav-number">3.1.</span> <span class="nav-text">3.1 基于时间进行range分区例子：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-基于主键进行range分区例子：由于表如果设置了主键的话，分区的字段一定要属于主键，所以一般要么把分区字段添加为主键，要么就只能针对主键进行分区"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 基于主键进行range分区例子：由于表如果设置了主键的话，分区的字段一定要属于主键，所以一般要么把分区字段添加为主键，要么就只能针对主键进行分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-分区后，如果在查询时想要避免搜索所有分区，则最好在查询的where条件中添加分区字段作为过滤条件。哪怕是冗余的没有必要的过滤条件，对于定位分区还是有用的。"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 分区后，如果在查询时想要避免搜索所有分区，则最好在查询的where条件中添加分区字段作为过滤条件。哪怕是冗余的没有必要的过滤条件，对于定位分区还是有用的。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-分区表使用的限制"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 分区表使用的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-分区后，一般情况下，各种查询使用和join联表操作均正常使用，和分区前一致，但要注意几个问题"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 分区后，一般情况下，各种查询使用和join联表操作均正常使用，和分区前一致，但要注意几个问题</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wanglv Yihua</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.4.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

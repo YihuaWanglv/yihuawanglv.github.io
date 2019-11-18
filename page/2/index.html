@@ -321,6 +321,361 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/10/08/git-git常用操作命令记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/08/git-git常用操作命令记录/" itemprop="url">
+                  git-git常用操作命令记录
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-08 11:07:07" itemprop="dateCreated datePublished" datetime="2018-10-08T11:07:07+08:00">2018-10-08</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一些日常使用的git命令记录</p>
+<ul>
+<li><p>强制更新远程仓库的更新到本地</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch --all &amp;&amp; git reset --hard origin/master &amp;&amp; git pull</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建、检出和删除分支</p>
+</li>
+</ul>
+<p>创建并切换分支<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -b dev</span><br></pre></td></tr></table></figure></p>
+<p>检出分支<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev</span><br></pre></td></tr></table></figure></p>
+<p>删除分支<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -d dev</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>合并dev分支到master<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br><span class="line">git merge dev</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/10/08/git-如何把本地仓库中使用https连接方式的库改为使用ssh/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/08/git-如何把本地仓库中使用https连接方式的库改为使用ssh/" itemprop="url">
+                  [git]如何把本地仓库中使用https连接方式的库改为使用ssh
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-08 10:13:04" itemprop="dateCreated datePublished" datetime="2018-10-08T10:13:04+08:00">2018-10-08</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>有时候，我们在检出github或者gitlab的repository时，原先是使用https的方式检出的。现在想把原先这个使用https方式检出的库改为使用ssh连接，要如何做呢？</p>
+<p>很简单，使用一条命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git remote set-url origin git@github.com:username/repo-name-here.git</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/10/08/git-如何在一台电脑设置使用多个git的SshKey/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2316,7 +2671,7 @@ C-x u           撤销。
 <li>翻译（TRANSLATION）</li>
 </ul>
 <hr>
-<p>翻译：孙一江 <a href="mailto:&#x73;&#x75;&#110;&#121;&#x69;&#x6a;&#105;&#97;&#110;&#x67;&#64;&#103;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#x6d;" target="_blank" rel="noopener">&#x73;&#x75;&#110;&#121;&#x69;&#x6a;&#105;&#97;&#110;&#x67;&#64;&#103;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#x6d;</a><br>维护：薛富侨 <a href="mailto:&#x78;&#102;&#x71;&#x2e;&#102;&#114;&#x65;&#101;&#x40;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;" target="_blank" rel="noopener">&#x78;&#102;&#x71;&#x2e;&#102;&#114;&#x65;&#101;&#x40;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;</a><br>校对：水木社区（<a href="http://www.newsmth.net）Emacs" target="_blank" rel="noopener">www.newsmth.net）Emacs</a> 板众多网友及众多 Emacs 中文用户</p>
+<p>翻译：孙一江 <a href="mailto:&#115;&#x75;&#110;&#121;&#x69;&#106;&#x69;&#97;&#x6e;&#x67;&#64;&#x67;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#111;&#109;" target="_blank" rel="noopener">&#115;&#x75;&#110;&#121;&#x69;&#106;&#x69;&#97;&#x6e;&#x67;&#64;&#x67;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#111;&#109;</a><br>维护：薛富侨 <a href="mailto:&#x78;&#102;&#x71;&#46;&#102;&#114;&#x65;&#101;&#64;&#103;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#109;" target="_blank" rel="noopener">&#x78;&#102;&#x71;&#46;&#102;&#114;&#x65;&#101;&#64;&#103;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#109;</a><br>校对：水木社区（<a href="http://www.newsmth.net）Emacs" target="_blank" rel="noopener">www.newsmth.net）Emacs</a> 板众多网友及众多 Emacs 中文用户</p>
 <p>Emacs 快速指南（Tutorial）早有两个刘昭宏的中文译本，繁简各一。其简体版本<br>（TUTORIAL.cn）基本由繁体版本（TUTORIAL.zh）经词语替换而得。然而繁简中文<br>不仅在用词习惯上有所不同，更有诸多表达方式与句法方面的差异，因此一直以来<br>用户使用 TUTORIAL.cn 都会略觉生硬和晦涩。这次重新翻译 TUTORIAL.cn 的动机<br>正是源于这种体验，希望我们的工作能够让本文更好地发挥其作用。TUTORIAL.zh<br>的译文质量很高，在翻译过程中给予过我们许多借鉴和参考，在此对刘昭宏的工作<br>表示感谢。</p>
 <p>翻译过程中最大的挑战莫过于术语译词的选择了。经过水木社区 Emacs 板热心<br>网友小范围内的讨论，我们选择了现在的译法。用户的广泛参与是自由软件生命<br>力的源泉，所以如果你有任何建议、勘误或想法，请用你喜欢的方式向我们提出。<br>你可以通过电子邮件直接联系维护者，也可以放到 GNU Emacs 的开发邮件列表<br>或者水木社区的 Emacs 板上进行讨论。</p>
 <p>下面列出主要术语的译词对照，并给出注释说明：</p>
@@ -2943,393 +3298,11 @@ incremental search    渐进式搜索 [3]
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/02/25/mosquitto使用记录与服务器调试/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wanglv Yihua">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/default_avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="iyihua">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/25/mosquitto使用记录与服务器调试/" itemprop="url">
-                  mosquitto使用记录与服务器调试
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-02-25 11:14:27" itemprop="dateCreated datePublished" datetime="2018-02-25T11:14:27+08:00">2018-02-25</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mqtt/" itemprop="url" rel="index"><span itemprop="name">mqtt</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="mosquitto使用记录："><a href="#mosquitto使用记录：" class="headerlink" title="mosquitto使用记录："></a>mosquitto使用记录：</h1><h2 id="mqtt："><a href="#mqtt：" class="headerlink" title="mqtt："></a>mqtt：</h2><h3 id="启动："><a href="#启动：" class="headerlink" title="启动："></a>启动：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosquitto -c /etc/mosquitto/mosquitto.conf</span><br></pre></td></tr></table></figure>
-<h3 id="加-d表示后台运行："><a href="#加-d表示后台运行：" class="headerlink" title="加-d表示后台运行："></a>加-d表示后台运行：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosquitto -c /etc/mosquitto/mosquitto.conf -d</span><br></pre></td></tr></table></figure>
-<h3 id="sub一个主题："><a href="#sub一个主题：" class="headerlink" title="sub一个主题："></a>sub一个主题：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosquitto_sub -h localhost -t test -d</span><br></pre></td></tr></table></figure>
-<h3 id="pub一个消息到主题："><a href="#pub一个消息到主题：" class="headerlink" title="pub一个消息到主题："></a>pub一个消息到主题：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosquitto_pub -h localhost -m &quot;中文 的mqtt&quot; -t test -d</span><br></pre></td></tr></table></figure>
-<h3 id="重启：找到线程，kill"><a href="#重启：找到线程，kill" class="headerlink" title="重启：找到线程，kill"></a>重启：找到线程，kill</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps -A | grep mosquitto</span><br><span class="line">kill -9 xxx</span><br></pre></td></tr></table></figure>
-<h2 id="linux最大连接数设置"><a href="#linux最大连接数设置" class="headerlink" title="linux最大连接数设置"></a>linux最大连接数设置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ulimit -n20000 -s512</span><br><span class="line"></span><br><span class="line">ulimit -f unlimited</span><br><span class="line">ulimit -t unlimited</span><br><span class="line">ulimit -v unlimited</span><br><span class="line">ulimit -n 1048576</span><br><span class="line">ulimit -m unlimited</span><br><span class="line">ulimit -u 1048576</span><br></pre></td></tr></table></figure>
-<p>Till now I have achieved 74K concurrent connections on a broker. I have configured the ulimit of broker server by editing sysctl.conf and limit.conf file.</p>
-<ul>
-<li>vi /etc/sysctl.conf</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fs.file-max = 10000000 </span><br><span class="line">fs.nr_open = 10000000</span><br><span class="line">net.ipv4.tcp_mem = 786432 1697152 1945728</span><br><span class="line">net.ipv4.tcp_rmem = 4096 4096 16777216</span><br><span class="line">net.ipv4.tcp_wmem = 4096 4096 16777216</span><br><span class="line">net.ipv4.ip_local_port_range = 1000 65535</span><br></pre></td></tr></table></figure>
-<ul>
-<li>vi /etc/security/limits.conf</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* soft nofile 10000000</span><br><span class="line">* hard nofile 10000000</span><br><span class="line">root soft nofile 10000000</span><br><span class="line">root hard nofile 10000000</span><br></pre></td></tr></table></figure>
-<p>After this reboot your system.</p>
-<h2 id="mqtt启动后，需要开放对应端口的，则处理如下"><a href="#mqtt启动后，需要开放对应端口的，则处理如下" class="headerlink" title="mqtt启动后，需要开放对应端口的，则处理如下"></a>mqtt启动后，需要开放对应端口的，则处理如下</h2><p>CentOS 7.0默认使用的是firewall作为防火墙，使用iptables必须重新设置一下</p>
-<p>1、直接关闭防火墙</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld.service #停止firewall</span><br><span class="line"></span><br><span class="line">systemctl disable firewalld.service #禁止firewall开机启动</span><br></pre></td></tr></table></figure>
-<p>2、设置 iptables service</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install iptables-services</span><br></pre></td></tr></table></figure>
-<p>如果要修改防火墙配置，如增加防火墙端口3306<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/iptables</span><br></pre></td></tr></table></figure></p>
-<p>增加规则<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT</span><br></pre></td></tr></table></figure></p>
-<p>保存退出后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart iptables.service #重启防火墙使配置生效</span><br><span class="line"></span><br><span class="line">systemctl enable iptables.service #设置防火墙开机启动</span><br></pre></td></tr></table></figure></p>
-<p>最后重启系统使设置生效即可。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/02/25/事务管理-spring事务使用注意点、数据库事务的隔离级别与锁/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wanglv Yihua">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/default_avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="iyihua">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/25/事务管理-spring事务使用注意点、数据库事务的隔离级别与锁/" itemprop="url">
-                  事务管理-spring事务使用注意点、数据库事务的隔离级别与锁
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-02-25 10:43:01" itemprop="dateCreated datePublished" datetime="2018-02-25T10:43:01+08:00">2018-02-25</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="1-spring事务-Transactional的注意点"><a href="#1-spring事务-Transactional的注意点" class="headerlink" title="1. spring事务@Transactional的注意点"></a>1. spring事务@Transactional的注意点</h1><p>@Transactional注解可以标注在类和方法上，也可以标注在定义的接口和接口方法上。<br>如果我们在接口上标注@Transactional注解，会留下这样的隐患：因为注解不能被继承，所以业务接口中标注的@Transactional注解不会被业务实现类继承。所以可能会出现不启动事务的情况。所以，spring建议我们将@Transaction注解在实现类上。<br>在方法上的@Transactional注解会覆盖掉类上的@Transactional。</p>
-<p>注意：</p>
-<p>　　@Transactional 可以作用于接口、接口方法、类以及类方法上。当作用于类上时，该类的所有 public 方法将都具有该类型的事务属性，同时，我们也可以在方法级别使用该标注来覆盖类级别的定义。</p>
-<p>　　虽然 @Transactional 注解可以作用于接口、接口方法、类以及类方法上，但是 Spring 建议不要在接口或者接口方法上使用该注解，因为这只有在使用基于接口的代理时它才会生效。另外， @Transactional 注解应该只被应用到 public 方法上，这是由 Spring AOP 的本质决定的。如果你在 protected、private 或者默认可见性的方法上使用 @Transactional 注解，这将被忽略，也不会抛出任何异常。</p>
-<p>　　默认情况下，只有来自外部的方法调用才会被AOP代理捕获，也就是，类内部方法调用本类内部的其他方法并不会引起事务行为，即使被调用方法使用@Transactional注解进行修饰。</p>
-<h1 id="2-数据库事务中的隔离级别和锁"><a href="#2-数据库事务中的隔离级别和锁" class="headerlink" title="2. 数据库事务中的隔离级别和锁"></a>2. 数据库事务中的隔离级别和锁</h1><p>数据库事务在后端开发中占非常重要的地位，如何确保数据读取的正确性、安全性也是我们需要研究的问题。</p>
-<h2 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h2><p>首先总结一下数据库事务正确执行的四个要素（ACID）：</p>
-<p>原子性（Atomicity）：即事务是不可分割的最小工作单元，事务内的操作要么全做，要么全不做，不能只做一部分；<br>一致性（Consistency）：在事务执行前数据库的数据处于正确的状态，而事务执行完成后数据库的数据还是处于正确的状态，即数据完整性约束没有被破坏；比如我们做银行转账的相关业务，A转账给B，要求A转的钱B一定要收到。如果A转了钱而B没有收到，那么数据库数据的一致性就得不到保障，在做高并发业务时要注意合理的设计。<br>隔离性（Isolation）：并发事务执行之间无影响，在一个事务内部的操作对其他事务是不产生影响，这需要事务隔离级别来指定隔离性；<br>持久性（Durability）：事务一旦执行成功，它对数据库的数据的改变必须是永久的，不会因各种异常导致数据不一致或丢失。<br>事务隔离级别<br>大部分数据库事务操作都是并发执行的，这就可能遇到下面的几种问题：</p>
-<p>丢失更新：两个事务同时更新一行数据，最后一个事务的更新会覆盖掉第一个事务的更新，从而导致第一个事务更新的数据丢失，后果比较严重。一般是由于没加锁的原因造成的。<br>脏读（Dirty reads）：一个事务A读取到了另一个事务B还没有提交的数据，并在此基础上进行操作。如果B事务rollback，那么A事务所读取到的数据就是不正确的，会带来问题。<br>不可重复读（Non-repeatable reads）：在同一事务范围内读取两次相同的数据，所返回的结果不同。比如事务B第一次读数据后，事务A更新数据并commit，那么事务B第二次读取的数据就与第一次是不一样的。<br>幻读（Phantom reads）：一个事务A读取到了另一个事务B新提交的数据。比如，事务A对一个表中所有行的数据按照某规则进行修改（整表操作），同时，事务B向表中插入了一行原始数据，那么后面事务A再对表进行操作时，会发现表中居然还有一行数据没有被修改，就像发生了幻觉，飘飘欲仙一样。<br>注意：不可重复读和幻读的区别是，不可重复读对应的表的操作是更改(UPDATE)，而幻读对应的表的操作是插入(INSERT)，两种的应对策略不一样。对于不可重复读，只需要采用行级锁防止该记录被更新即可，而对于幻读必须加个表级锁，防止在表中插入数据。有关锁的问题，下面会讨论。</p>
-<p>为了处理这几种问题，SQL定义了下面的4个等级的事务隔离级别：</p>
-<p>未提交读（READ UNCOMMITTED ）：最低隔离级别，一个事务能读取到别的事务未提交的更新数据，很不安全，可能出现丢失更新、脏读、不可重复读、幻读；<br>提交读（READ COMMITTED）：一个事务能读取到别的事务提交的更新数据，不能看到未提交的更新数据，不会出现丢失更新、脏读，但可能出现不可重复读、幻读；<br>可重复读（REPEATABLE READ）：保证同一事务中先后执行的多次查询将返回同一结果，不受其他事务影响，不可能出现丢失更新、脏读、不可重复读，但可能出现幻读；<br>序列化（SERIALIZABLE）：最高隔离级别，不允许事务并发执行，而必须串行化执行，最安全，不可能出现更新、脏读、不可重复读、幻读，但是效率最低。<br>隔离级别越高，数据库事务并发执行性能越差，能处理的操作越少。所以一般地，推荐使用REPEATABLE READ级别保证数据的读一致性。对于幻读的问题，可以通过加锁来防止。<br>MySQL支持这四种事务等级，默认事务隔离级别是REPEATABLE READ。Oracle数据库支持READ COMMITTED 和 SERIALIZABLE这两种事务隔离级别，所以Oracle数据库不支持脏读。Oracle数据库默认的事务隔离级别是READ COMMITTED。</p>
-<h2 id="各种锁"><a href="#各种锁" class="headerlink" title="各种锁"></a>各种锁</h2><p>下面总结一下MySQL中的锁，有好几种分类。其它RDBMS也差不多是这样。</p>
-<h3 id="首先最重要的分类就是乐观锁-Optimistic-Lock-和悲观锁-Pessimistic-Lock-，这实际上是两种锁策略。"><a href="#首先最重要的分类就是乐观锁-Optimistic-Lock-和悲观锁-Pessimistic-Lock-，这实际上是两种锁策略。" class="headerlink" title="首先最重要的分类就是乐观锁(Optimistic Lock)和悲观锁(Pessimistic Lock)，这实际上是两种锁策略。"></a>首先最重要的分类就是乐观锁(Optimistic Lock)和悲观锁(Pessimistic Lock)，这实际上是两种锁策略。</h3><p>乐观锁，顾名思义就是非常乐观，非常相信真善美，每次去读数据都认为其它事务没有在写数据，所以就不上锁，快乐的读取数据，而只在提交数据的时候判断其它事务是否搞过这个数据了，如果搞过就rollback。乐观锁相当于一种检测冲突的手段，可通过为记录添加版本或添加时间戳来实现。</p>
-<p>悲观锁，对其它事务抱有保守的态度，每次去读数据都认为其它事务想要作祟，所以每次读数据的时候都会上锁，直到取出数据。悲观锁大多数情况下依靠数据库的锁机制实现，以保证操作最大程度的独占性，但随之而来的是各种开销。悲观锁相当于一种避免冲突的手段。<br>选择标准：如果并发量不大，或数据冲突的后果不严重，则可以使用乐观锁；而如果并发量大或数据冲突后果比较严重（对用户不友好），那么就使用悲观锁。</p>
-<h3 id="从读写角度，分共享锁（S锁，Shared-Lock）和排他锁（X锁，Exclusive-Lock），也叫读锁（Read-Lock）和写锁（Write-Lock）。"><a href="#从读写角度，分共享锁（S锁，Shared-Lock）和排他锁（X锁，Exclusive-Lock），也叫读锁（Read-Lock）和写锁（Write-Lock）。" class="headerlink" title="从读写角度，分共享锁（S锁，Shared Lock）和排他锁（X锁，Exclusive Lock），也叫读锁（Read Lock）和写锁（Write Lock）。"></a>从读写角度，分共享锁（S锁，Shared Lock）和排他锁（X锁，Exclusive Lock），也叫读锁（Read Lock）和写锁（Write Lock）。</h3><p>理解：</p>
-<p>持有S锁的事务只读不可写。如果事务A对数据D加上S锁后，其它事务只能对D加上S锁而不能加X锁。<br>持有X锁的事务可读可写。如果事务A对数据D加上X锁后，其它事务不能再对D加锁，直到A对D的锁解除。<br>从锁的粒度角度，主要分为表级锁（Table Lock）和行级锁（Row Lock）。<br>表级锁将整个表加锁，性能开销最小。用户可以同时进行读操作。当一个用户对表进行写操作时，用户可以获得一个写锁，写锁禁止其他的用户读写操作。写锁比读锁的优先级更高，即使有读操作已排在队列中，一个被申请的写锁仍可以排在所队列的前列。<br>行级锁仅对指定的记录进行加锁，这样其它进程可以对同一个表中的其它记录进行读写操作。行级锁粒度最小，开销大，能够支持高并发，可能会出现死锁。</p>
-<h3 id="MySQL的MyISAM引擎使用表级锁，而InnoDB支持表级锁和行级锁，默认是行级锁。"><a href="#MySQL的MyISAM引擎使用表级锁，而InnoDB支持表级锁和行级锁，默认是行级锁。" class="headerlink" title="MySQL的MyISAM引擎使用表级锁，而InnoDB支持表级锁和行级锁，默认是行级锁。"></a>MySQL的MyISAM引擎使用表级锁，而InnoDB支持表级锁和行级锁，默认是行级锁。</h3><p>还有BDB引擎使用页级锁，即一次锁定一组记录，并发性介于行级锁和表级锁之间。</p>
-<h3 id="三级锁协议"><a href="#三级锁协议" class="headerlink" title="三级锁协议"></a>三级锁协议</h3><p>三级加锁协议是为了保证正确的事务并发操作，事务在读、写数据库对象是需要遵循的加锁规则。</p>
-<p>一级封锁协议：事务T在修改数据R之前必须对它加X锁，直到事务结束方可释放。而若事务T只是读数据，不进行修改，则不需加锁，因此一级加锁协议下可能会出现脏读和不可重复读。<br>二级加锁协议：在一级加锁协议的基础上，加上这样一条规则——事务T在读取数据R之前必须对它加S锁，直到读取完毕以后释放。二级加锁协议下可能会出现不可重复读。<br>三级加锁协议：在一级加锁协议的基础上，加上这样一条规则——事务T在读取数据R之前必须对它加X锁，直到事务结束方可释放。三级加锁协议避免了脏读和不可重复读的问题。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -3374,7 +3347,7 @@ incremental search    渐进式搜索 [3]
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-count">81</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -3423,7 +3396,9 @@ incremental search    渐进式搜索 [3]
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -3830,7 +3805,19 @@ incremental search    渐进式搜索 [3]
                     
                       
                     
-                    <span class="site-state-item-count">197</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">203</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

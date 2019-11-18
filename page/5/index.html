@@ -321,6 +321,367 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2016/08/10/SOA分布式事务解决方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/08/10/SOA分布式事务解决方案/" itemprop="url">
+                  SOA分布式事务解决方案
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-08-10 09:48:30" itemprop="dateCreated datePublished" datetime="2016-08-10T09:48:30+08:00">2016-08-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/architecture/" itemprop="url" rel="index"><span itemprop="name">architecture</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这里是转的一段摘录：</p>
+<p>传统分布式系统与当代的面向SOA的分布式系统有一定区别，论概念上来讲SOA是以服务为中心，既然以服务为中心就会有很多面向服务的设计原则。而传统的分布式系统没有服务的概念，也没有所谓的一切皆是服务的原则。而当代SOA则首要原则就要以服务为中心，针对服务的设计又有了很多服务设计原则。<br>SOA对服务还进行了类型的划分，按照服务的应用层次来分类：业务服务、组合服务、应用服务，包装服务等。再按照管理与运维的层面来分类：控制服务、调度服务、监控服务等等。传统的分布式系统是没有这些的，我们谈论的是当代SOA的分布式系统，所以我们强调的是以服务为中心，以服务设计原则为架构设计的指导要求，当代SOA是对传统分布式系统的一个迭代进化，不是一个时代的产物，SOA更加强调了以服务为首要原则，已经提升到了另外一个更加高级的层面。<br>本节我们交流一下在当代SOA分布式系统中的数据一致性问题，在SOA中这主要涉及两个层面来考虑，一个是服务层面、一个数据持久化层面。再按照一致性的基本要求，可以分为：读一致性、写一致性、会话一致性、最终一致性、实时一致性等几个维度，当然还有其他几个维度的一致性要求。<br>我们这里重点讨论在企业应用中实施SOA时遇到的一些比较棘手的数据一致性问题和解决方案，对于刚才提到的几个维度的一致性要求均具有重要的参考价值。<br>1.分布式事务（基于DTC的分布式事务）<br>以往包括目前很多项目还是倾向于使用DTC来处理分布式事务，这个方案多数适用于一般的企业应用，业务、访问量、数据量要求都不是很高的情况下。用DTC很方便，事务的自动传播、事务的自动感知、事务的自动回滚和提交，这都是中央DTC帮我们管理好了。<br>由于有中央DTC的统一协调，看似好像帮我们解决了很多我们需要考虑的问题，但是它也是整个平台的致命的瓶颈，一旦DTC由于某个问题出现错误，而且这种错误都是系统层面的错误，很多问题我们是无能为力的。如果出现问题，整个应用平台都无法完成任何一个跨服务的业务流程，这其实很危险，你不无法控制系统的稳定性。<br>这里总结，DTC用于一般的小型企业应用，不建议用在中等规模的企业应用中，不是说这个东西不好，而是无法控制它。<br>2.事务补偿（提供正向或反向的操作来让数据在业务上是一致的）<br>世界级SOA专家所编写的书籍里都提到了使用“补偿”操作来完成数据的不一致性，当我们编写了一个服务方法A，就需要一个服务方法A1的补偿接口来完成A服务的补偿操作。但是真实的业务情况下很难实施这种看起来好像很优美很柔性的设计。没有实践就没有发言权，我们公司的技术团队就实施过这种方案，但是很不理想，这跟技术本身及技术团队没关系，只是我们的平台业务太复杂，很难去“补偿”一个已经做过的操作。<br>这当然也要看你所面对的项目情况，量变引起质变，如果你的各种量都上去了，这个“补偿”方案不实际，而且很难在数据层面进行“补偿“。总之，这不是一个中长期的方案。<br>3.异步EDA（基于异步事件流来实现柔性的分布式事务）<br>EDA简称”事件驱动架构“。多个系统之间通过传播”事件“来驱动整个业务的运转。系统之间没有紧耦合的同步调用的操作，都是通过发出异步的“事件”来通知下一个业务环节。<br>可能你会有一个疑问，异步操作，是不是系统之间延迟会很长，其实不是，现在有很多成熟的消息中间件在内网内几乎是毫秒级别的延迟，至于跨机房就看物理上的距离了。<br>异步操作有很多好处，这里我就不浪费大家时间重复那些好处。使用EDA实现系统之间的一个松散的事务关系，要把控好项目的质量，对系统的非功能需求、BUG数等等可能会影响业务操作中断的地方都要建立起适当的机制，让这些问题尽早的在线下解决。比如可以实施UnitTest、持续集成等一些敏捷的方法论。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2016/08/08/What-s-the-simplest-way-to-print-a-Java-array/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/08/08/What-s-the-simplest-way-to-print-a-Java-array/" itemprop="url">
+                  What's the simplest way to print a Java array?
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-08-08 18:24:43" itemprop="dateCreated datePublished" datetime="2016-08-08T18:24:43+08:00">2016-08-08</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Examples:</p>
+<ul>
+<li>Simple Array:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String[] array = new String[] &#123;&quot;John&quot;, &quot;Mary&quot;, &quot;Bob&quot;&#125;;</span><br><span class="line">System.out.println(Arrays.toString(array));</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Output:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[John, Mary, Bob]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Nested Array:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String[][] deepArray = new String[][] &#123;&#123;&quot;John&quot;, &quot;Mary&quot;&#125;, &#123;&quot;Alice&quot;, &quot;Bob&quot;&#125;&#125;;</span><br><span class="line">System.out.println(Arrays.toString(deepArray));</span><br><span class="line">//output: [[Ljava.lang.String;@106d69c, [Ljava.lang.String;@52e922]</span><br><span class="line">System.out.println(Arrays.deepToString(deepArray));</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Output:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[John, Mary], [Alice, Bob]]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>double Array:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">double[] doubleArray = &#123; 7.0, 9.0, 5.0, 1.0, 3.0 &#125;;</span><br><span class="line">System.out.println(Arrays.toString(doubleArray));</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Output:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[7.0, 9.0, 5.0, 1.0, 3.0 ]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>int Array:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int[] intArray = &#123; 7, 9, 5, 1, 3 &#125;;</span><br><span class="line">System.out.println(Arrays.toString(intArray));</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Output:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[7, 9, 5, 1, 3 ]</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://localhost:4000/2016/08/04/Java-中int和Integer的区别/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1888,421 +2249,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2016/07/08/使用RAP作为接口管理和调试的工具/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wanglv Yihua">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/default_avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="iyihua">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/07/08/使用RAP作为接口管理和调试的工具/" itemprop="url">
-                  使用RAP作为接口管理和调试的工具
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2016-07-08 14:06:27" itemprop="dateCreated datePublished" datetime="2016-07-08T14:06:27+08:00">2016-07-08</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一、为什么使用RAP？"><a href="#一、为什么使用RAP？" class="headerlink" title="一、为什么使用RAP？"></a>一、为什么使用RAP？</h2><ul>
-<li><p>接口定义和管理，传统的方式是使用word文档。但word文档管理接口文档有不少问题。<br>比如，word文档在相互传递的过程中，可能会导致彼此文档版本不一致；word文档难以结构化的集中维护各项目的文档，而且编写麻烦；word文档的接口定义功能单一，仅仅提供文档功能。</p>
-</li>
-<li><p>而是用RAP作为接口文档定义管理的工具，则为我们提供了以下功能：<br>1.可以按团队和项目结构化的管理接口文档。<br>2.提供统一方便的接口定义方式。<br>3.为前端提供mock数据，以便在后端没有开发好后端接口前，提前根据接口进行开发。<br>4.校验后端提供的接口的数据格式和字段是否符合要求。</p>
-</li>
-</ul>
-<p><strong>虽然RAP在自动化测试方面功能还有欠缺，仍不失为接口管理一个十分方便的工具。</strong></p>
-<h2 id="二、RAP安装部署"><a href="#二、RAP安装部署" class="headerlink" title="二、RAP安装部署"></a>二、RAP安装部署</h2><h3 id="1-下载RAP"><a href="#1-下载RAP" class="headerlink" title="1.下载RAP"></a>1.下载RAP</h3><p>在RAP的github主页上下载最新版本war包</p>
-<h3 id="2-环境准备"><a href="#2-环境准备" class="headerlink" title="2.环境准备"></a>2.环境准备</h3><p>需要tomcat和mysql</p>
-<h3 id="3-部署"><a href="#3-部署" class="headerlink" title="3.部署"></a>3.部署</h3><p>RAP在tomcat中要使用ROOT的方式部署。</p>
-<ul>
-<li>把下载好的war包放入tomcat的webapps目录下，然后删除tomcat中webapps目录下原先的ROOT文件夹，重命名war包为ROOT.war</li>
-<li>在mysql中建立rap_db数据库，导入RAPgithub代码中提供的sql脚本初始化数据库</li>
-<li>启动tomcat</li>
-<li>访问<a href="http://localhost:8080/">http://localhost:8080/</a></li>
-</ul>
-<h2 id="三、RAP的使用"><a href="#三、RAP的使用" class="headerlink" title="三、RAP的使用"></a>三、RAP的使用</h2><h3 id="1-注册账号"><a href="#1-注册账号" class="headerlink" title="1.注册账号"></a>1.注册账号</h3><p>RAP自带账号管理和登陆功能，使用前先注册账号，登陆即可</p>
-<h3 id="2-添加团队、项目产品线等。"><a href="#2-添加团队、项目产品线等。" class="headerlink" title="2.添加团队、项目产品线等。"></a>2.添加团队、项目产品线等。</h3><ul>
-<li>创建团队<br><img src="/images/rap-001.png" alt></li>
-<li>创建产品线<br><img src="/images/rap-002.png" alt><br><img src="/images/rap-003.png" alt></li>
-</ul>
-<h3 id="3-分组和项目管理"><a href="#3-分组和项目管理" class="headerlink" title="3.分组和项目管理"></a>3.分组和项目管理</h3><p><img src="/images/rap-004.png" alt><br><img src="/images/rap-009.png" alt></p>
-<h3 id="4-添加模块和页面"><a href="#4-添加模块和页面" class="headerlink" title="4.添加模块和页面"></a>4.添加模块和页面</h3><p><img src="/images/rap-005.png" alt></p>
-<h3 id="5-添加接口"><a href="#5-添加接口" class="headerlink" title="5.添加接口"></a>5.添加接口</h3><p><img src="/images/rap-006.png" alt></p>
-<h3 id="6-为返回值字段设置自定义的mock数据"><a href="#6-为返回值字段设置自定义的mock数据" class="headerlink" title="6.为返回值字段设置自定义的mock数据"></a>6.为返回值字段设置自定义的mock数据</h3><p><img src="/images/rap-007.png" alt><br>我们可以为不同的字段自定义不同的mock数据，已适应实际需要。</p>
-<h3 id="7-前端使用接口mock数据提前进行开发"><a href="#7-前端使用接口mock数据提前进行开发" class="headerlink" title="7.前端使用接口mock数据提前进行开发"></a>7.前端使用接口mock数据提前进行开发</h3><p><img src="/images/rap-008.png" alt><br>这个例子中的“项目根路径”：localhost:8080/mockjs/1<br>就是这个mock服务的模拟服务路径<br>前端访问：<a href="http://localhost:8080/mockjs/1/client/machine/activate?drive_id=sfd&amp;activate_code=sdf&amp;mac_address=sdf">http://localhost:8080/mockjs/1/client/machine/activate?drive_id=sfd&amp;activate_code=sdf&amp;mac_address=sdf</a><br>就是访问我们模拟的接口地址: /client/machine/activate</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2016/07/07/dev-collect-2016-06-collect-of-dev/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wanglv Yihua">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/default_avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="iyihua">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/07/07/dev-collect-2016-06-collect-of-dev/" itemprop="url">
-                  [dev][collect][2016-06]collect-of-dev
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2016-07-07 11:08:24" itemprop="dateCreated datePublished" datetime="2016-07-07T11:08:24+08:00">2016-07-07</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/collect/" itemprop="url" rel="index"><span itemprop="name">collect</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="2016-06"><a href="#2016-06" class="headerlink" title="2016-06"></a>2016-06</h2><h3 id="2016-06-24"><a href="#2016-06-24" class="headerlink" title="2016-06-24"></a>2016-06-24</h3><ul>
-<li><p>【直播全文记录】 从零开始搭建高可用IM系统<br><a href="http://mp.weixin.qq.com/s?__biz=MzAwMDU1MTE1OQ==&amp;mid=206924771&amp;idx=1&amp;sn=4705b832c410765a3c89acfa1300b0b6&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">http://mp.weixin.qq.com/s?__biz=MzAwMDU1MTE1OQ==&amp;mid=206924771&amp;idx=1&amp;sn=4705b832c410765a3c89acfa1300b0b6&amp;scene=21#wechat_redirect</a></p>
-</li>
-<li><p>如何设计类似微信的多终端数据同步协议 | Grouk实践分享<br><a href="http://chuansong.me/n/1718596" target="_blank" rel="noopener">http://chuansong.me/n/1718596</a></p>
-</li>
-</ul>
-<h3 id="2016-06-22"><a href="#2016-06-22" class="headerlink" title="2016-06-22"></a>2016-06-22</h3><ul>
-<li><p>基于Dubbo框架构建分布式服务<br><a href="http://shiyanjun.cn/archives/1075.html" target="_blank" rel="noopener">http://shiyanjun.cn/archives/1075.html</a></p>
-</li>
-<li><p>高并发性能调试经验分享<br><a href="https://zhuanlan.zhihu.com/p/21348220" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/21348220</a></p>
-</li>
-<li><p>Java进阶（三）多线程开发关键技术<br><a href="http://www.jasongj.com/java/multi_thread/" target="_blank" rel="noopener">http://www.jasongj.com/java/multi_thread/</a></p>
-</li>
-<li><p>blog kafka<br><a href="http://www.jasongj.com/tags/Kafka/" target="_blank" rel="noopener">http://www.jasongj.com/tags/Kafka/</a></p>
-</li>
-<li><p>如何构建Android MVVM应用程序<br><a href="http://www.jianshu.com/p/2fc41a310f79" target="_blank" rel="noopener">http://www.jianshu.com/p/2fc41a310f79</a></p>
-</li>
-<li><p>超详细React Native实现微信好友/朋友圈分享功能-Android/iOS双平台通用<br><a href="http://www.lcode.org/%E8%B6%85%E8%AF%A6%E7%BB%86react-native%E5%AE%9E%E7%8E%B0%E5%BE%AE%E4%BF%A1%E5%A5%BD%E5%8F%8B%E6%9C%8B%E5%8F%8B%E5%9C%88%E5%88%86%E4%BA%AB%E5%8A%9F%E8%83%BD-androidios%E5%8F%8C%E5%B9%B3%E5%8F%B0/" target="_blank" rel="noopener">http://www.lcode.org/%E8%B6%85%E8%AF%A6%E7%BB%86react-native%E5%AE%9E%E7%8E%B0%E5%BE%AE%E4%BF%A1%E5%A5%BD%E5%8F%8B%E6%9C%8B%E5%8F%8B%E5%9C%88%E5%88%86%E4%BA%AB%E5%8A%9F%E8%83%BD-androidios%E5%8F%8C%E5%B9%B3%E5%8F%B0/</a></p>
-</li>
-<li><p>SHELL编程之常用技巧<br><a href="http://mp.weixin.qq.com/s?__biz=MzIxNDMyODgyMA==&amp;mid=2247483698&amp;idx=1&amp;sn=3b52493d202362aae0bf511002e63d52" target="_blank" rel="noopener">http://mp.weixin.qq.com/s?__biz=MzIxNDMyODgyMA==&amp;mid=2247483698&amp;idx=1&amp;sn=3b52493d202362aae0bf511002e63d52</a></p>
-</li>
-<li><p>让你爱上写作的 11 款 Markdown 工具<br><a href="http://www.ifanr.com/app/665209" target="_blank" rel="noopener">http://www.ifanr.com/app/665209</a></p>
-</li>
-<li><p>基于Docker搭建Hadoop集群之升级版<br><a href="http://kiwenlau.com/2016/06/12/160612-hadoop-cluster-docker-update/" target="_blank" rel="noopener">http://kiwenlau.com/2016/06/12/160612-hadoop-cluster-docker-update/</a></p>
-</li>
-<li><p>Kafka设计解析（一）- Kafka背景及架构介绍<br><a href="http://www.jasongj.com/2015/03/10/KafkaColumn1/" target="_blank" rel="noopener">http://www.jasongj.com/2015/03/10/KafkaColumn1/</a></p>
-</li>
-</ul>
-<h3 id="2016-06-15"><a href="#2016-06-15" class="headerlink" title="2016-06-15"></a>2016-06-15</h3><ul>
-<li><p>淘拍拍前端架构2.0-简介<br><a href="http://www.w3cfuns.com/notes/25101/33114eae47bbda0c50fb67eeb4a7fd6c.html" target="_blank" rel="noopener">http://www.w3cfuns.com/notes/25101/33114eae47bbda0c50fb67eeb4a7fd6c.html</a></p>
-</li>
-<li><p>轻松监控上万台服务器：企业运维监控平台架构设计与实践指南<br><a href="http://dbaplus.cn/news-21-466-1.html" target="_blank" rel="noopener">http://dbaplus.cn/news-21-466-1.html</a></p>
-</li>
-<li><p>Mesos+Zookeeper+Marathon+Docker分布式集群管理最佳实践<br><a href="http://mp.weixin.qq.com/s?__biz=MzI4NTA1MDEwNg==&amp;mid=2650755658&amp;idx=1&amp;sn=9f5e4831b2c27d66e4296c49ffcd3d7c&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">http://mp.weixin.qq.com/s?__biz=MzI4NTA1MDEwNg==&amp;mid=2650755658&amp;idx=1&amp;sn=9f5e4831b2c27d66e4296c49ffcd3d7c&amp;scene=21#wechat_redirect</a></p>
-</li>
-<li><p>网易蜂巢微服务架构：用RabbitMQ实现轻量级通信<br><a href="http://mp.weixin.qq.com/s?__biz=MzI4NTA1MDEwNg==&amp;mid=2650755639&amp;idx=2&amp;sn=0e43c1b7168dbcd60582326fb20f2f19&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">http://mp.weixin.qq.com/s?__biz=MzI4NTA1MDEwNg==&amp;mid=2650755639&amp;idx=2&amp;sn=0e43c1b7168dbcd60582326fb20f2f19&amp;scene=21#wechat_redirect</a></p>
-</li>
-<li><p>使用Vue.js从零构建GitHub项目浏览器<br><a href="http://xlbd.me/vue-demo-github-file-explorer/" target="_blank" rel="noopener">http://xlbd.me/vue-demo-github-file-explorer/</a></p>
-</li>
-</ul>
-<h3 id="2016-06-07"><a href="#2016-06-07" class="headerlink" title="2016-06-07"></a>2016-06-07</h3><ul>
-<li><p>搭建Git服务器<br><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137583770360579bc4b458f044ce7afed3df579123eca000" target="_blank" rel="noopener">http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137583770360579bc4b458f044ce7afed3df579123eca000</a></p>
-</li>
-<li><p>gitlab centos一键安装<br><a href="http://blog.csdn.net/asd131531/article/details/42374285" target="_blank" rel="noopener">http://blog.csdn.net/asd131531/article/details/42374285</a><br><a href="http://www.linuxidc.com/Linux/2014-08/105137.htm" target="_blank" rel="noopener">http://www.linuxidc.com/Linux/2014-08/105137.htm</a></p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2347,7 +2298,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-count">81</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2396,7 +2347,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2803,7 +2756,19 @@
                     
                       
                     
-                    <span class="site-state-item-count">197</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">203</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
