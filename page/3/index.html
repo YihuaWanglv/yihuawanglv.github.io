@@ -321,6 +321,184 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/02/25/JavaError-The-temporary-upload-location-tmp-tomcat-7104877156386249310-8070-work-Tomcat-localhost-ROOT-is-not-valid/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/25/JavaError-The-temporary-upload-location-tmp-tomcat-7104877156386249310-8070-work-Tomcat-localhost-ROOT-is-not-valid/" itemprop="url">
+                  JavaError-The-temporary-upload-location-[/tmp/tomcat.7104877156386249310.8070/work/Tomcat/localhost/ROOT]-is-not-valid
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-02-25 14:13:44" itemprop="dateCreated datePublished" datetime="2018-02-25T14:13:44+08:00">2018-02-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="SpringBoot内置Tomcat缓存文件目录被意外删除导致异常"><a href="#SpringBoot内置Tomcat缓存文件目录被意外删除导致异常" class="headerlink" title="SpringBoot内置Tomcat缓存文件目录被意外删除导致异常"></a>SpringBoot内置Tomcat缓存文件目录被意外删除导致异常</h1><p>在项目中，一般会将文件临时保存到缓存目录</p>
+<p>当时使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">File.createTempFile(&quot;tmp&quot;, ext,</span><br><span class="line">                        (File) request.getServletContext().getAttribute(ServletContext.TEMPDIR))</span><br></pre></td></tr></table></figure></p>
+<p>创建临时文件时，项目一直运行正常，然而有一次报异常：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.web.multipart.MultipartException: Could not parse multipart servlet request; nested exception is java.io.IOException: </span><br><span class="line">    The temporary upload location [/tmp/tomcat.7104877156386249310.8070/work/Tomcat/localhost/ROOT] is not valid</span><br></pre></td></tr></table></figure>
+<p>检查文件目录，文件确实不在，检查代码，也未发现问题。实在不知道原因，只有重启了服务器，问题也就不再出现。</p>
+<p>今天偶然查看官方文档，发现问题所在，也提供了解决方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    If you choose to use Tomcat on CentOS be aware that, by default, a temporary directory is</span><br><span class="line">used to store compiled JSPs, file uploads etc. This directory may be deleted by tmpwatch</span><br><span class="line">while your application is running leading to failures. To avoid this, you may want to customize </span><br><span class="line">your tmpwatch configuration so that tomcat.* directories are not deleted, or configure</span><br><span class="line">server.tomcat.basedir so that embedded Tomcat uses a different location</span><br></pre></td></tr></table></figure></p>
+<p>前往目录 /etc/cron.daily/ 中，修改 tmpwatch 文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#! /bin/sh</span><br><span class="line">flags=-umc</span><br><span class="line">/usr/sbin/tmpwatch &quot;$flags&quot; -x /tmp/.X11-unix -x /tmp/.XIM-unix \</span><br><span class="line">        -x /tmp/.font-unix -x /tmp/.ICE-unix -x /tmp/.Test-unix \</span><br><span class="line">        -X &apos;/tmp/hsperfdata_*&apos; 10d /tmp \</span><br><span class="line">        -X &apos;/tmp/tomcat.*&apos; 10d /tmp</span><br><span class="line">/usr/sbin/tmpwatch &quot;$flags&quot; 30d /var/tmp</span><br><span class="line">for d in /var/&#123;cache/man,catman&#125;/&#123;cat?,X11R6/cat?,local/cat?&#125;; do</span><br><span class="line">    if [ -d &quot;$d&quot; ]; then</span><br><span class="line">        /usr/sbin/tmpwatch &quot;$flags&quot; -f 30d &quot;$d&quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>可以看到添加了一行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-X &apos;/tmp/tomcat.*&apos; 10d /tmp</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/02/25/mosquitto使用记录与服务器调试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2196,179 +2374,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2017/03/11/shell-从svn更新代码maven打包后部署的一个简单脚本/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wanglv Yihua">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/default_avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="iyihua">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/03/11/shell-从svn更新代码maven打包后部署的一个简单脚本/" itemprop="url">
-                  shell-从svn更新代码maven打包后部署的一个简单脚本
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-03-11 15:48:45" itemprop="dateCreated datePublished" datetime="2017-03-11T15:48:45+08:00">2017-03-11</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/deploy/" itemprop="url" rel="index"><span itemprop="name">deploy</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>shell是个好东西，服务器上面的操作做多了，就需要想想办法把手工做的事情让脚本帮我们处理。以下是一个针对spring boot项目从svn更新出最新代码，然后maven打包，最后启动发布的一个脚本例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#build icms app</span><br><span class="line">path_src=/home/src/trunk/icms</span><br><span class="line">path_target=$&#123;path_src&#125;/target</span><br><span class="line">path_app=/home/app</span><br><span class="line">path_log=/data/logs/icms</span><br><span class="line">file_app=icms-1.4.1.RELEASE.jar</span><br><span class="line">url_app=localhost:8091</span><br><span class="line"></span><br><span class="line">cd /home/src/trunk/icms</span><br><span class="line">svn update</span><br><span class="line">mvn clean package -P pro -Dmaven.test.skip=true</span><br><span class="line"></span><br><span class="line">if [ -f $&#123;path_target&#125;/$&#123;file_app&#125; ]; then</span><br><span class="line">        echo &quot;build success, now begin to deploy...&quot;</span><br><span class="line">        curl -X POST $&#123;url_app&#125;/shutdown</span><br><span class="line">        yes | cp -rf $&#123;path_target&#125;/$&#123;file_app&#125; $&#123;path_app&#125;/</span><br><span class="line">        chmod +x $&#123;path_app&#125;/$&#123;file_app&#125;</span><br><span class="line">        nohup java -jar $&#123;path_app&#125;/$&#123;file_app&#125; &lt; /dev/null &gt; $&#123;path_log&#125;/icms.log 2&gt;&amp;1 &amp;</span><br><span class="line">else</span><br><span class="line">        echo &quot;build failed!&quot;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">echo &quot;build process finish.&quot;</span><br></pre></td></tr></table></figure>
-<p>脚本中的“curl -X POST ${url_app}/shutdown”这里是因为使用了spring boot的优雅关闭应用，需要在应用添加maven依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
-<p>然后在配置文件中添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">endpoints.shutdown.enabled=true</span><br><span class="line">endpoints.shutdown.sensitive=false</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2418,7 +2423,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">81</span>
+                    <span class="site-state-item-count">82</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2469,7 +2474,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2888,7 +2895,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">203</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">206</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

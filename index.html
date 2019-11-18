@@ -321,6 +321,182 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2019/11/18/记一次线上卡顿问题的处理-Mysql的Lock-wait-timeout/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/18/记一次线上卡顿问题的处理-Mysql的Lock-wait-timeout/" itemprop="url">
+                  记一次线上卡顿问题的处理-Mysql的Lock wait timeout
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-18 15:09:04 / 修改时间：15:11:55" itemprop="dateCreated datePublished" datetime="2019-11-18T15:09:04+08:00">2019-11-18</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/exception/" itemprop="url" rel="index"><span itemprop="name">exception</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>记一次线上卡顿问题的处理-Mysql的Lock wait timeout</p>
+<h2 id="问题表现："><a href="#问题表现：" class="headerlink" title="问题表现："></a>问题表现：</h2><ul>
+<li><p>1.程序jdbc连接Mysql报错’Lock wait timeout exceeded;try restarting transaction’</p>
+</li>
+<li><p>2.页面某2个操作提交卡住，一直转</p>
+</li>
+</ul>
+<h2 id="排查："><a href="#排查：" class="headerlink" title="排查："></a>排查：</h2><p>使用<code>show processlist</code>和<code>select * from information_schema.innodb_trx</code>会看到有一些等待中的mysql线程</p>
+<p>可以用kill命令把这些mysql线程kill掉，但这只是暂时紧急应对，没有定位到真正的问题所在。<br><code></code><br>出现锁等待超时的情况，一般可能会是因为一个sql执行完，但未commit，接下来的sql要执行就会被锁，直到完成或者超时结束。</p>
+<p>继续对问题进行分析。</p>
+<p>出现等待的两个sql分别是<code>insert ignore into biz_customer_contact...</code>以及<code>update customer ...</code>，而这2个表只是百万级的表，正常的插入和更新表操作一般不会造成等待和锁定，因此考虑不是sql本身的问题，sql本身不用进行优化。</p>
+<p>同时，出现锁定超时的问题仅仅是这2个地方这2个sql，而其它地方没有出现问题，因此也排除是整个数据库出现性能问题。</p>
+<p>再深入问题，找到这2个sql执行所在的程序代码，review代码后，发现两者有一个共性特征，就是两者都需要调用一个其它系统的接口来完成业务操作。考虑到网络调用或者I/O操作是很可能出现阻塞等待的情况的，因此怀疑是接口调用等待的时间太长，导致数据库事务一直在等待，最后导致超时，出现上面的线程等待问题和异常报错。</p>
+<p>针对这个问题，专门测试了依赖的接口和咨询对应系统的运维后，确认，依赖的系统确实当时正出现问题。因此定位到问题所在。</p>
+<h2 id="定位到问题后，就要做适当的处理，处理方案为："><a href="#定位到问题后，就要做适当的处理，处理方案为：" class="headerlink" title="定位到问题后，就要做适当的处理，处理方案为："></a>定位到问题后，就要做适当的处理，处理方案为：</h2><ul>
+<li>1.恢复出现问题的服务</li>
+<li>2.将接口调用的超时时间缩短，原来是没有设置这个时间的。缩短接口超时时间的目的是假如服务不可用，则快速失败抛出错误，避免系统一直等待卡顿。</li>
+<li>3.适当设置mysql数据库的锁等待超时时间，例如<code>set GLOBAL innodb_lock_wait_timeout = 5000</code>，缩短等待超时时间，目的也是避免高并发时太多线程在等待拖垮系统。</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://localhost:4000/2019/11/18/Mysql的PARTITION表分区要点/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2057,242 +2233,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/12/13/Golang-Tour学习记录/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wanglv Yihua">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/default_avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="iyihua">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/13/Golang-Tour学习记录/" itemprop="url">
-                  Golang Tour学习记录
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-12-13 17:38:04" itemprop="dateCreated datePublished" datetime="2018-12-13T17:38:04+08:00">2018-12-13</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Go-Tour-Golang-tour学习中的一些记录，帮组理解和记忆"><a href="#Go-Tour-Golang-tour学习中的一些记录，帮组理解和记忆" class="headerlink" title="Go Tour: Golang tour学习中的一些记录，帮组理解和记忆"></a>Go Tour: Golang tour学习中的一些记录，帮组理解和记忆</h2><ul>
-<li><p>设置GOPATH，可以改变go工作空间</p>
-</li>
-<li><p>工作空间中需要一个src目录，需要一个bin目录</p>
-</li>
-<li><p>导入package时，使用pkg的时候，只需要导入路径中的最后一段即可引用该包</p>
-</li>
-<li><p>go build or go install,注意目录</p>
-</li>
-<li><p>package中大写的定义是对外开放的，小写的则外面不可用</p>
-</li>
-<li><p>类型：string boolean int(int int8 int32 int 64) uint(…) complex(complex64 complex 128)</p>
-</li>
-<li><p>if else, for, switch, 没有while，while使用for代替</p>
-</li>
-<li><p>= 是赋值, := 声明并赋值</p>
-</li>
-<li><p>structs, array, slice, map, pointer</p>
-</li>
-<li><p>Function, Method</p>
-</li>
-</ul>
-<p>func 可以作为参数，有func闭包</p>
-<p>Method则是定义于struct上的方法，如果是定义于struct值上的方法，不会改变struct值本身；如果是定义于struct指针上的方法，可以改变struct的值。</p>
-<p>给struct定方法有2种方式，一种是把struct作为方法的receiver，另一种是把struct作为方法的参数。</p>
-<p>两者有一个重要的差别:</p>
-<p>functions with a pointer argument must take a pointer:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var v Vertex</span><br><span class="line">ScaleFunc(v, 5)  // Compile error!</span><br><span class="line">ScaleFunc(&amp;v, 5) // OK</span><br></pre></td></tr></table></figure></p>
-<p>while methods with pointer receivers take either a value or a pointer as the receiver when they are called:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var v Vertex</span><br><span class="line">v.Scale(5)  // OK</span><br><span class="line">p := &amp;v</span><br><span class="line">p.Scale(10) // OK</span><br></pre></td></tr></table></figure></p>
-<p>当一个函数有一个指针参数，那么传入的参数必须是指针；<br>而当一个函数有一个指针的receiver，那么调用这个方法时，用指针或者值都是可以的。</p>
-<ul>
-<li>interface</li>
-</ul>
-<p>type只要实现了interface的方法，即为interface的实现，无需显式的定义。</p>
-<p>在底层interface values可以被看做是含value和type的一个元祖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(value, type)</span><br></pre></td></tr></table></figure></p>
-<p>an interface value that holds a nil concrete value is itself non-nil.<br>就是没有空指针问题</p>
-<ul>
-<li>Errors</li>
-</ul>
-<p>function call的时候，就看err这个返回值，如果是nil，意味着成功，非空意味着执行报错了。</p>
-<ul>
-<li>Reader</li>
-</ul>
-<p>Reader可以嵌套</p>
-<ul>
-<li><p>Image</p>
-</li>
-<li><p>Goroutines</p>
-</li>
-</ul>
-<ul>
-<li>Channels</li>
-</ul>
-<p>Channels are a typed conduit through which you can send and receive values with the channel operator, &lt;-.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ch &lt;- v    // Send v to channel ch.</span><br><span class="line">v := &lt;-ch  // Receive from ch, and</span><br><span class="line">           // assign value to v.</span><br><span class="line">(The data flows in the direction of the arrow.)</span><br></pre></td></tr></table></figure></p>
-<p>Like maps and slices, channels must be created before use:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ch := make(chan int)</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>Range and Close</li>
-</ul>
-<p>channel能Range，也能close，只有sender能close channel，receiver不能。<br>一般不需要close channel，除非你需要显式的通知receiver channel已关闭。</p>
-<ul>
-<li>Select</li>
-</ul>
-<p>它会监听case中的channel，当channel发生变时，再触发一次选择</p>
-<ul>
-<li>sync.Mutex</li>
-</ul>
-<p>互斥锁</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// Inc increments the counter for the given key.</span><br><span class="line">func (c *SafeCounter) Inc(key string) &#123;</span><br><span class="line">  c.mux.Lock()</span><br><span class="line">  // Lock so only one goroutine at a time can access the map c.v.</span><br><span class="line">  c.v[key]++</span><br><span class="line">  c.mux.Unlock()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Value returns the current value of the counter for the given key.</span><br><span class="line">func (c *SafeCounter) Value(key string) int &#123;</span><br><span class="line">  c.mux.Lock()</span><br><span class="line">  // Lock so only one goroutine at a time can access the map c.v.</span><br><span class="line">  defer c.mux.Unlock()</span><br><span class="line">  return c.v[key]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2342,7 +2282,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">81</span>
+                    <span class="site-state-item-count">82</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2393,7 +2333,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2812,7 +2754,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">203</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">206</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

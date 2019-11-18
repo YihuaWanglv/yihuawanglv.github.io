@@ -321,6 +321,242 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/12/13/Golang-Tour学习记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wanglv Yihua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iyihua">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/13/Golang-Tour学习记录/" itemprop="url">
+                  Golang Tour学习记录
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-13 17:38:04" itemprop="dateCreated datePublished" datetime="2018-12-13T17:38:04+08:00">2018-12-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Go-Tour-Golang-tour学习中的一些记录，帮组理解和记忆"><a href="#Go-Tour-Golang-tour学习中的一些记录，帮组理解和记忆" class="headerlink" title="Go Tour: Golang tour学习中的一些记录，帮组理解和记忆"></a>Go Tour: Golang tour学习中的一些记录，帮组理解和记忆</h2><ul>
+<li><p>设置GOPATH，可以改变go工作空间</p>
+</li>
+<li><p>工作空间中需要一个src目录，需要一个bin目录</p>
+</li>
+<li><p>导入package时，使用pkg的时候，只需要导入路径中的最后一段即可引用该包</p>
+</li>
+<li><p>go build or go install,注意目录</p>
+</li>
+<li><p>package中大写的定义是对外开放的，小写的则外面不可用</p>
+</li>
+<li><p>类型：string boolean int(int int8 int32 int 64) uint(…) complex(complex64 complex 128)</p>
+</li>
+<li><p>if else, for, switch, 没有while，while使用for代替</p>
+</li>
+<li><p>= 是赋值, := 声明并赋值</p>
+</li>
+<li><p>structs, array, slice, map, pointer</p>
+</li>
+<li><p>Function, Method</p>
+</li>
+</ul>
+<p>func 可以作为参数，有func闭包</p>
+<p>Method则是定义于struct上的方法，如果是定义于struct值上的方法，不会改变struct值本身；如果是定义于struct指针上的方法，可以改变struct的值。</p>
+<p>给struct定方法有2种方式，一种是把struct作为方法的receiver，另一种是把struct作为方法的参数。</p>
+<p>两者有一个重要的差别:</p>
+<p>functions with a pointer argument must take a pointer:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var v Vertex</span><br><span class="line">ScaleFunc(v, 5)  // Compile error!</span><br><span class="line">ScaleFunc(&amp;v, 5) // OK</span><br></pre></td></tr></table></figure></p>
+<p>while methods with pointer receivers take either a value or a pointer as the receiver when they are called:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var v Vertex</span><br><span class="line">v.Scale(5)  // OK</span><br><span class="line">p := &amp;v</span><br><span class="line">p.Scale(10) // OK</span><br></pre></td></tr></table></figure></p>
+<p>当一个函数有一个指针参数，那么传入的参数必须是指针；<br>而当一个函数有一个指针的receiver，那么调用这个方法时，用指针或者值都是可以的。</p>
+<ul>
+<li>interface</li>
+</ul>
+<p>type只要实现了interface的方法，即为interface的实现，无需显式的定义。</p>
+<p>在底层interface values可以被看做是含value和type的一个元祖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(value, type)</span><br></pre></td></tr></table></figure></p>
+<p>an interface value that holds a nil concrete value is itself non-nil.<br>就是没有空指针问题</p>
+<ul>
+<li>Errors</li>
+</ul>
+<p>function call的时候，就看err这个返回值，如果是nil，意味着成功，非空意味着执行报错了。</p>
+<ul>
+<li>Reader</li>
+</ul>
+<p>Reader可以嵌套</p>
+<ul>
+<li><p>Image</p>
+</li>
+<li><p>Goroutines</p>
+</li>
+</ul>
+<ul>
+<li>Channels</li>
+</ul>
+<p>Channels are a typed conduit through which you can send and receive values with the channel operator, &lt;-.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ch &lt;- v    // Send v to channel ch.</span><br><span class="line">v := &lt;-ch  // Receive from ch, and</span><br><span class="line">           // assign value to v.</span><br><span class="line">(The data flows in the direction of the arrow.)</span><br></pre></td></tr></table></figure></p>
+<p>Like maps and slices, channels must be created before use:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ch := make(chan int)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Range and Close</li>
+</ul>
+<p>channel能Range，也能close，只有sender能close channel，receiver不能。<br>一般不需要close channel，除非你需要显式的通知receiver channel已关闭。</p>
+<ul>
+<li>Select</li>
+</ul>
+<p>它会监听case中的channel，当channel发生变时，再触发一次选择</p>
+<ul>
+<li>sync.Mutex</li>
+</ul>
+<p>互斥锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// Inc increments the counter for the given key.</span><br><span class="line">func (c *SafeCounter) Inc(key string) &#123;</span><br><span class="line">  c.mux.Lock()</span><br><span class="line">  // Lock so only one goroutine at a time can access the map c.v.</span><br><span class="line">  c.v[key]++</span><br><span class="line">  c.mux.Unlock()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Value returns the current value of the counter for the given key.</span><br><span class="line">func (c *SafeCounter) Value(key string) int &#123;</span><br><span class="line">  c.mux.Lock()</span><br><span class="line">  // Lock so only one goroutine at a time can access the map c.v.</span><br><span class="line">  defer c.mux.Unlock()</span><br><span class="line">  return c.v[key]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/10/08/git-git常用操作命令记录/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2671,7 +2907,7 @@ C-x u           撤销。
 <li>翻译（TRANSLATION）</li>
 </ul>
 <hr>
-<p>翻译：孙一江 <a href="mailto:&#115;&#x75;&#110;&#121;&#x69;&#106;&#x69;&#97;&#x6e;&#x67;&#64;&#x67;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#111;&#109;" target="_blank" rel="noopener">&#115;&#x75;&#110;&#121;&#x69;&#106;&#x69;&#97;&#x6e;&#x67;&#64;&#x67;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#111;&#109;</a><br>维护：薛富侨 <a href="mailto:&#x78;&#102;&#x71;&#46;&#102;&#114;&#x65;&#101;&#64;&#103;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#109;" target="_blank" rel="noopener">&#x78;&#102;&#x71;&#46;&#102;&#114;&#x65;&#101;&#64;&#103;&#x6d;&#97;&#105;&#108;&#46;&#99;&#x6f;&#109;</a><br>校对：水木社区（<a href="http://www.newsmth.net）Emacs" target="_blank" rel="noopener">www.newsmth.net）Emacs</a> 板众多网友及众多 Emacs 中文用户</p>
+<p>翻译：孙一江 <a href="mailto:&#115;&#x75;&#110;&#x79;&#x69;&#106;&#x69;&#97;&#x6e;&#103;&#64;&#x67;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;" target="_blank" rel="noopener">&#115;&#x75;&#110;&#x79;&#x69;&#106;&#x69;&#97;&#x6e;&#103;&#64;&#x67;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;</a><br>维护：薛富侨 <a href="mailto:&#120;&#102;&#x71;&#46;&#x66;&#x72;&#101;&#101;&#64;&#x67;&#109;&#x61;&#105;&#108;&#46;&#x63;&#111;&#109;" target="_blank" rel="noopener">&#120;&#102;&#x71;&#46;&#x66;&#x72;&#101;&#101;&#64;&#x67;&#109;&#x61;&#105;&#108;&#46;&#x63;&#111;&#109;</a><br>校对：水木社区（<a href="http://www.newsmth.net）Emacs" target="_blank" rel="noopener">www.newsmth.net）Emacs</a> 板众多网友及众多 Emacs 中文用户</p>
 <p>Emacs 快速指南（Tutorial）早有两个刘昭宏的中文译本，繁简各一。其简体版本<br>（TUTORIAL.cn）基本由繁体版本（TUTORIAL.zh）经词语替换而得。然而繁简中文<br>不仅在用词习惯上有所不同，更有诸多表达方式与句法方面的差异，因此一直以来<br>用户使用 TUTORIAL.cn 都会略觉生硬和晦涩。这次重新翻译 TUTORIAL.cn 的动机<br>正是源于这种体验，希望我们的工作能够让本文更好地发挥其作用。TUTORIAL.zh<br>的译文质量很高，在翻译过程中给予过我们许多借鉴和参考，在此对刘昭宏的工作<br>表示感谢。</p>
 <p>翻译过程中最大的挑战莫过于术语译词的选择了。经过水木社区 Emacs 板热心<br>网友小范围内的讨论，我们选择了现在的译法。用户的广泛参与是自由软件生命<br>力的源泉，所以如果你有任何建议、勘误或想法，请用你喜欢的方式向我们提出。<br>你可以通过电子邮件直接联系维护者，也可以放到 GNU Emacs 的开发邮件列表<br>或者水木社区的 Emacs 板上进行讨论。</p>
 <p>下面列出主要术语的译词对照，并给出注释说明：</p>
@@ -3120,184 +3356,6 @@ incremental search    渐进式搜索 [3]
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/02/25/JavaError-The-temporary-upload-location-tmp-tomcat-7104877156386249310-8070-work-Tomcat-localhost-ROOT-is-not-valid/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wanglv Yihua">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/default_avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="iyihua">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/25/JavaError-The-temporary-upload-location-tmp-tomcat-7104877156386249310-8070-work-Tomcat-localhost-ROOT-is-not-valid/" itemprop="url">
-                  JavaError-The-temporary-upload-location-[/tmp/tomcat.7104877156386249310.8070/work/Tomcat/localhost/ROOT]-is-not-valid
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-02-25 14:13:44" itemprop="dateCreated datePublished" datetime="2018-02-25T14:13:44+08:00">2018-02-25</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-22 04:44:05" itemprop="dateModified" datetime="2019-05-22T04:44:05+08:00">2019-05-22</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="SpringBoot内置Tomcat缓存文件目录被意外删除导致异常"><a href="#SpringBoot内置Tomcat缓存文件目录被意外删除导致异常" class="headerlink" title="SpringBoot内置Tomcat缓存文件目录被意外删除导致异常"></a>SpringBoot内置Tomcat缓存文件目录被意外删除导致异常</h1><p>在项目中，一般会将文件临时保存到缓存目录</p>
-<p>当时使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">File.createTempFile(&quot;tmp&quot;, ext,</span><br><span class="line">                        (File) request.getServletContext().getAttribute(ServletContext.TEMPDIR))</span><br></pre></td></tr></table></figure></p>
-<p>创建临时文件时，项目一直运行正常，然而有一次报异常：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.web.multipart.MultipartException: Could not parse multipart servlet request; nested exception is java.io.IOException: </span><br><span class="line">    The temporary upload location [/tmp/tomcat.7104877156386249310.8070/work/Tomcat/localhost/ROOT] is not valid</span><br></pre></td></tr></table></figure>
-<p>检查文件目录，文件确实不在，检查代码，也未发现问题。实在不知道原因，只有重启了服务器，问题也就不再出现。</p>
-<p>今天偶然查看官方文档，发现问题所在，也提供了解决方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    If you choose to use Tomcat on CentOS be aware that, by default, a temporary directory is</span><br><span class="line">used to store compiled JSPs, file uploads etc. This directory may be deleted by tmpwatch</span><br><span class="line">while your application is running leading to failures. To avoid this, you may want to customize </span><br><span class="line">your tmpwatch configuration so that tomcat.* directories are not deleted, or configure</span><br><span class="line">server.tomcat.basedir so that embedded Tomcat uses a different location</span><br></pre></td></tr></table></figure></p>
-<p>前往目录 /etc/cron.daily/ 中，修改 tmpwatch 文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#! /bin/sh</span><br><span class="line">flags=-umc</span><br><span class="line">/usr/sbin/tmpwatch &quot;$flags&quot; -x /tmp/.X11-unix -x /tmp/.XIM-unix \</span><br><span class="line">        -x /tmp/.font-unix -x /tmp/.ICE-unix -x /tmp/.Test-unix \</span><br><span class="line">        -X &apos;/tmp/hsperfdata_*&apos; 10d /tmp \</span><br><span class="line">        -X &apos;/tmp/tomcat.*&apos; 10d /tmp</span><br><span class="line">/usr/sbin/tmpwatch &quot;$flags&quot; 30d /var/tmp</span><br><span class="line">for d in /var/&#123;cache/man,catman&#125;/&#123;cat?,X11R6/cat?,local/cat?&#125;; do</span><br><span class="line">    if [ -d &quot;$d&quot; ]; then</span><br><span class="line">        /usr/sbin/tmpwatch &quot;$flags&quot; -f 30d &quot;$d&quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
-<p>可以看到添加了一行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-X &apos;/tmp/tomcat.*&apos; 10d /tmp</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3347,7 +3405,7 @@ incremental search    渐进式搜索 [3]
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">81</span>
+                    <span class="site-state-item-count">82</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -3398,7 +3456,9 @@ incremental search    渐进式搜索 [3]
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -3817,7 +3877,13 @@ incremental search    渐进式搜索 [3]
                     
                       
                     
-                    <span class="site-state-item-count">203</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">206</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
